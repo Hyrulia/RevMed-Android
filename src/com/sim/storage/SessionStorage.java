@@ -1,7 +1,8 @@
 package com.sim.storage;
 
-import android.app.Application;
 import com.sim.evamedic.MyApp;
+
+import android.app.Application;
 
 public class SessionStorage {
 
