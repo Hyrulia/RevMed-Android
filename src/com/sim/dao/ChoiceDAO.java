@@ -11,7 +11,7 @@ public class ChoiceDAO extends DAO<Choice> {
 	public static final String ID        	= "_id";
 	public static final String CHOICE  		= "choice";
 	public static final String QUESTION_ID  = "question_id";
-	
+	//ok
 
 	@Override
 	public long create(Choice c) {

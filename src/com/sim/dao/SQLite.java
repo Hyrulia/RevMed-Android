@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLite extends SQLiteOpenHelper{
 	 
-    private static String DB_PATH = "/data/data/com.sim.workshop1/databases/"; 
+    private static String DB_PATH = "/data/data/com.sim.evamedic/databases/"; 
     private static String DB_NAME = "data.sqlite"; 
     private SQLiteDatabase myDataBase; 
  

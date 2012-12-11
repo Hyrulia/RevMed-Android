@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Application;
+import android.content.Context;
 
 
 public class MyApp extends Application {
@@ -13,8 +14,9 @@ public class MyApp extends Application {
 		return vars;
 	}
 	
-	private static Application app; 
-	public static Application getInstance(Application x) {
+	private static Context app; 
+	
+	public static Context getInstance(Context x) {
 		if (app == null)
 			app = x;
 		return app;
