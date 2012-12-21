@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:baselineAligned="false"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
@@ -8,61 +9,31 @@
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-        <ProgressBar
-	        android:id="@+id/progressBar1"
-	        style="?android:attr/progressBarStyleLarge"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentBottom="true"
-	        android:layout_centerHorizontal="true"
-	     />
+        android:layout_weight="2">
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/progressBar1"
-        android:background="@drawable/textshape"
-        android:layout_margin="5dip"
-        android:text="@string/question"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+       <ProgressBar
+            android:id="@+id/countDownPBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+       
+    	<TextView
+	        android:id="@+id/questionTView"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_above="@id/countDownPBar"
+	        android:background="@drawable/textshape"
+	        android:layout_margin="5dip"
+	        android:text="@string/question"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+	</RelativeLayout>
 
-</RelativeLayout>
-
- <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_weight="1"
-     >
-    <Button
-        android:id="@+id/choiceAButton"
-        android:layout_width="match_parent"
-        android:layout_marginTop="20dip"
-        android:layout_height="wrap_content"
-        android:text="@string/choice_A" />
-    
-    <Button
-        android:id="@+id/choiceBButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/choiceAButton"
-        android:text="@string/choice_B" />
-
-    <Button
-        android:id="@+id/choiceCButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/choiceBButton"
-        android:text="@string/choice_C" />
-
-    <Button
-        android:id="@+id/choiceDButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/choiceCButton"
-        android:text="@string/choice_D" />
-
-   </RelativeLayout>  
-
+	 <ListView
+     	android:layout_width="match_parent"
+     	android:layout_height="match_parent"
+     	android:dividerHeight="3dip"
+     	android:layout_weight="1" />
+   
 </LinearLayout>

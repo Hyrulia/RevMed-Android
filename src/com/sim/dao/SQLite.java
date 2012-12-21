@@ -17,7 +17,7 @@ public class SQLite extends SQLiteOpenHelper{
     private SQLiteDatabase myDataBase; 
  
     public SQLite() {
-    	super(MyApp.getInstance(null), DB_NAME, null, 1);
+    	super(MyApp.getContext(), DB_NAME, null, 1);
     }	
  
 
@@ -55,7 +55,7 @@ public class SQLite extends SQLiteOpenHelper{
  
     private void copyDataBase() throws IOException{
 
-    	InputStream myInput = MyApp.getInstance(null).getAssets().open(DB_NAME);
+    	InputStream myInput = MyApp.getContext().getAssets().open(DB_NAME);
     	String outFileName = DB_PATH + DB_NAME;
     	OutputStream myOutput = new FileOutputStream(outFileName);
     	

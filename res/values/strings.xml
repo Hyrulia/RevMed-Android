@@ -4,9 +4,15 @@
     <string name="app_name">EvaMedic</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-	<string name="question">Settings</string>
-	<string name="choice_A">Settings</string>
-	<string name="choice_B">Settings</string>
-	<string name="choice_C">Settings</string>
-	<string name="choice_D">Settings</string>
+    <string name="question">Settings</string>
+    <string name="choice_A">Settings</string>
+    <string name="choice_B">Settings</string>
+    <string name="choice_C">Settings</string>
+    <string name="choice_D">Settings</string>
+    <string name="title_activity_specialy">SpecialyActivity</string>
+    <string name="title_activity_revision">Revision</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+
 </resources>

@@ -1,6 +1,8 @@
 package com.sim.dao;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import android.database.Cursor;
 import com.sim.entities.Choice;
 import com.sim.pattern.DAO;
@@ -30,22 +32,23 @@ public class ChoiceDAO extends DAO<Choice> {
 	}
 	
 
-	public Choice[] getByQuestionId(int id) {
+	public List<Choice> getByQuestionId(int id) {
 
 		Cursor crs = db.query(TABLE_NAME, 
 			new String[] {ID, CHOICE, QUESTION_ID},
 			QUESTION_ID + "=" + id, 
-			null, null, null, null);
+			null, null, null, "RANDOM()");
 
-		Choice[] choices = new Choice[4];
-
-		for(int i = 0; i < 4; i++) {
-			crs.moveToNext();
-			choices[i] = new Choice();
-			choices[i].setId(crs.getInt(crs.getColumnIndex(ID)));
-			choices[i].setQuestionId(crs.getInt(crs.getColumnIndex(QUESTION_ID)));
-			choices[i].setChoice(crs.getString(crs.getColumnIndex(CHOICE)));
+		 List<Choice> choices = new ArrayList<Choice>();
+		
+		while(crs.moveToNext()) {
+			Choice choice = new Choice();
+			choice.setId(crs.getInt(crs.getColumnIndex(ID)));
+			choice.setQuestionId(crs.getInt(crs.getColumnIndex(QUESTION_ID)));
+			choice.setChoice(crs.getString(crs.getColumnIndex(CHOICE)));
+			choices.add(choice);
 		}
+		crs.close();
 		return choices;
 	}
 

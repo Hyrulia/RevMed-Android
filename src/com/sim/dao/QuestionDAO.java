@@ -1,6 +1,8 @@
 package com.sim.dao;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import android.database.Cursor;
 import com.sim.entities.Question;
 import com.sim.pattern.DAO;
@@ -23,19 +25,25 @@ public class QuestionDAO extends DAO<Question> {
 		return null;
 	}
 	
+	
+	
 	@Override
 	public Question getById(int id) {
 		
 		return null;
 	}
 	
-	public ArrayList<Question> getBySpecialityId(int id) {
+	public List<Question> getLimitedAll(int specialityId, int max) {
+		return getBySpecialityId(specialityId).subList(0, max);
+	}
+	
+	public List<Question> getBySpecialityId(int id) {
 		Cursor crs = db.query(TABLE_NAME, 
-			new String[] { ID, QUESTION, SPECIALITY_ID},
+			new String[] { ID, QUESTION, SPECIALITY_ID },
 			SPECIALITY_ID + "=" + id, 
 			null, null, null, "RANDOM()");
 
-		ArrayList<Question> questions = new ArrayList<Question>();
+		List<Question> questions = new ArrayList<Question>();
 		while(crs.moveToNext()) {
 			Question q = new Question();
 			q.setId(crs.getInt(crs.getColumnIndex(ID)));
@@ -43,6 +51,7 @@ public class QuestionDAO extends DAO<Question> {
 			q.setSpecialityId(crs.getInt(crs.getColumnIndex(SPECIALITY_ID)));
 			questions.add(q);
 		}
+		crs.close();
 		return questions;
 	}
 

@@ -49,6 +49,7 @@ public class ScoreDAO extends DAO<Score>{
 			s.setDate(crs.getString(crs.getColumnIndex(DATE)));
 			scores.add(s);
 		}
+		crs.close();
 		return scores;
 	}
 

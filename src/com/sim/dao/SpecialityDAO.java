@@ -32,6 +32,7 @@ public class SpecialityDAO extends DAO<Speciality>{
 			s.setSpeciality(crs.getString(crs.getColumnIndex(SPECIALITY)));
 			specialities.add(s);
 		}
+		crs.close();
 		return specialities;
 		
 	}

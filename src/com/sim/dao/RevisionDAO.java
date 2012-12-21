@@ -40,7 +40,7 @@ public class RevisionDAO extends DAO<Revision> {
 		r.setId(crs.getInt(crs.getColumnIndex(ID)));
 		r.setQuestionId(crs.getInt(crs.getColumnIndex(QUESTION_ID)));
 		r.setRevision(crs.getString(crs.getColumnIndex(REVISION)));
-		
+		crs.close();
 		return r;
 		
 	}

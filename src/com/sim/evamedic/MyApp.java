@@ -14,12 +14,14 @@ public class MyApp extends Application {
 		return vars;
 	}
 	
-	private static Context app; 
+	private static Context context; 
 	
-	public static Context getInstance(Context x) {
-		if (app == null)
-			app = x;
-		return app;
+	
+	public static void setContext(Context ctx) {
+		context = ctx;
+	}
+	public static Context getContext() {
+		return context;
 	}
 	
 }
