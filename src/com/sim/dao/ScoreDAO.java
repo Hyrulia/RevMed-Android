@@ -14,24 +14,7 @@ public class ScoreDAO extends DAO<Score>{
 	public final static String SPECIALITY_ID = "speciality_id";
 	public final static String PSEUDO = "pseudo";
 	public final static String DATE = "date";
-	
-	@Override
-	public long create(Score object) {
-		
-		return 0;
-	}
 
-	@Override
-	public ArrayList<Score> getAll() {
-		
-		return null;
-	}
-
-	@Override
-	public Score getById(int id) {
-		
-		return null;
-	}
 	
 	public ArrayList<Score> getBySpecialityId(int id) {
 		Cursor crs = db.query(TABLE_NAME, 

@@ -23,7 +23,9 @@ public class SpecialityManager extends BaseAdapter{
 	public void fetchSpecialities() {
 		SpecialityDAO dao = (SpecialityDAO) DAOFactory.create(
 			DAOFactory.SPECIALITY);
+		dao.open();
 		specialities = dao.getAll();
+		dao.close();
 	}
 
 

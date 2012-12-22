@@ -6,8 +6,14 @@ public class Choice {
 	private String choice;
 	private int questionId;
 	private int state;
+	private boolean disabled = false;
 	
-	
+	public boolean isDisabled() {
+		return disabled;
+	}
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
 	public int getId() {
 		return id;
 	}

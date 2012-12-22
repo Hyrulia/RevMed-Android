@@ -20,11 +20,10 @@ public class SQLite extends SQLiteOpenHelper{
     	super(MyApp.getContext(), DB_NAME, null, 1);
     }	
  
-
     public void createDataBase() {
     	boolean dbExist = checkDataBase();
     	if(!dbExist){
-    		this.getReadableDatabase();
+    		getReadableDatabase();
         	try {
     			copyDataBase();
     		} catch (IOException e) {
@@ -41,15 +40,15 @@ public class SQLite extends SQLiteOpenHelper{
     	
     	try{
     		String myPath = DB_PATH + DB_NAME;
-    		checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+    		checkDB = SQLiteDatabase.openDatabase(myPath, null, 
+    			SQLiteDatabase.OPEN_READWRITE);
     	}catch(Exception e){
     		return false;
     	}
  
-    	if(checkDB != null){
+    	if(checkDB != null)
     		checkDB.close();
-    	}
- 
+    	
     	return checkDB != null ? true : false;
     }
  

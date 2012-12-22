@@ -1,9 +1,6 @@
 package com.sim.pattern;
 
-import java.util.ArrayList;
-
 import android.database.sqlite.SQLiteDatabase;
-
 import com.sim.dao.SQLite;
 
 public abstract class DAO<T> {
@@ -12,20 +9,17 @@ public abstract class DAO<T> {
 	protected SQLite sql;
 	
 	public DAO() {
-		
+		sql = new SQLite();
+		sql.createDataBase();
 	}
 	
 	public void open() {
-		
+		sql.openDataBase();
+		db = sql.getDB();
 	}
 	
 	public void close() {
-		
+		db.close();
 	}
 	
-	public abstract long create(T object);
-	
-	public abstract ArrayList<T> getAll();
-	
-	public abstract T getById(int id);
 }

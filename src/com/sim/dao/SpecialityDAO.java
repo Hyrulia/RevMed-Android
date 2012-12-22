@@ -12,14 +12,7 @@ public class SpecialityDAO extends DAO<Speciality>{
 	public final static String ID = "_id";
 	public final static String SPECIALITY = "speciality";
 	
-	
-	@Override
-	public long create(Speciality object) {
-		
-		return 0;
-	}
 
-	@Override
 	public ArrayList<Speciality> getAll() {
 		Cursor crs = db.query(TABLE_NAME, 
 			new String[] { ID, SPECIALITY},
@@ -37,10 +30,5 @@ public class SpecialityDAO extends DAO<Speciality>{
 		
 	}
 
-	@Override
-	public Speciality getById(int id) {
-		
-		return null;
-	}
 
 }
