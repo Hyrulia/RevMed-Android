@@ -4,7 +4,7 @@ public class Question {
 
 	private int id;
 	private String question;
-	private int specialityId;
+	private int objectiveId;
 	
 	
 	public int getId() {
@@ -19,12 +19,13 @@ public class Question {
 	public void setQuestion(String question) {
 		this.question = question;
 	}
-	public int getSpecialityId() {
-		return specialityId;
+	public int getObjectiveId() {
+		return objectiveId;
 	}
-	public void setSpecialityId(int specialityId) {
-		this.specialityId = specialityId;
+	public void setObjectiveId(int objectiveId) {
+		this.objectiveId = objectiveId;
 	}
+
 	
 	
 	

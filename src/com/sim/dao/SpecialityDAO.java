@@ -26,8 +26,7 @@ public class SpecialityDAO extends DAO<Speciality>{
 			specialities.add(s);
 		}
 		crs.close();
-		return specialities;
-		
+		return specialities;		
 	}
 
 

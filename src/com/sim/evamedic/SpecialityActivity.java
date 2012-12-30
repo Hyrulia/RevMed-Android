@@ -32,8 +32,9 @@ public class SpecialityActivity extends Activity {
 					long arg3) {
 				Speciality s = (Speciality) manager.getItem(arg2);
 				Intent intent = new Intent(SpecialityActivity.this, 
-					QuestionActivity.class);
+					ObjectiveActivity.class);
 				intent.putExtra("specId", s.getId());
+				intent.putExtra("speciality", s.getSpeciality());
 				startActivity(intent);
 				finish();
 			}

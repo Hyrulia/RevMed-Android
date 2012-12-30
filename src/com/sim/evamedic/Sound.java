@@ -1,6 +1,5 @@
-package com.sim.managers;
+package com.sim.evamedic;
 
-import com.sim.evamedic.MyApp;
 import com.sim.evamedic.R;
 
 import android.media.MediaPlayer;

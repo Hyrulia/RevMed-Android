@@ -10,28 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2">
-
-       <ProgressBar
-            android:id="@+id/countDownBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:max="100"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
-       
+            	
     	<TextView
-	        android:id="@+id/questionView"
-	        android:textColor="#ffffff"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:layout_above="@id/countDownBar"
-	        android:background="@drawable/question_shape"
-	        android:layout_margin="5dip"
-	        android:text="@string/question"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
-        
+    	    android:id="@+id/questionView"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="match_parent"
+    	    android:layout_margin="5dip"
+    	    android:background="@drawable/question_shape"
+    	    android:text="@string/question"
+    	    android:textAppearance="?android:attr/textAppearanceLarge"
+    	    android:textColor="#ffffff" />
+
 	</RelativeLayout>
 
 	 <ListView
