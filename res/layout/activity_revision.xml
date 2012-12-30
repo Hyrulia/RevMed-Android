@@ -5,10 +5,51 @@
     tools:context=".Revision" >
 
     <TextView
+        android:id="@+id/questionText"
+        android:textColor="#ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/question_shape"
         android:text="@string/hello_world" />
+
+    <TextView
+        android:id="@+id/choiceText"
+        android:textColor="#ffffff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="49dp"
+        android:background="@drawable/choice_shape_default"
+        android:text="@string/hello_world" />
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Back" />
+    
+    <ScrollView 
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/button1"
+        android:layout_below="@id/choiceText"
+        >
+	    <TextView
+	        android:id="@+id/revisionText"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="16dp"
+	        android:text="" />
+    </ScrollView>
+
+
 
 </RelativeLayout>

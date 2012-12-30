@@ -48,7 +48,7 @@ public class SpecialityManager extends BaseAdapter{
 	@Override
 	public View getView(int arg0, View arg1, ViewGroup arg2) {
 		TextView view = new TextView(MyApp.getContext());
-		view.setBackgroundResource(R.drawable.textshape);
+		view.setBackgroundResource(R.drawable.choice_shape_default);
 		view.setText(specialities.get(arg0).getSpeciality());
 		return view;
 	}

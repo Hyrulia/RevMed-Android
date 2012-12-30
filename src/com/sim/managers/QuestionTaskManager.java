@@ -2,62 +2,58 @@ package com.sim.managers;
 
 import java.lang.ref.WeakReference;
 
+import com.sim.evamedic.QuestionActivity;
+
 import android.os.AsyncTask;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 
 public class QuestionTaskManager extends AsyncTask<Void, Integer, Boolean> {
 
-	WeakReference<QuestionManager> manager;
-	int counter;
+	private WeakReference<QuestionActivity> manager;
+	private volatile Boolean running = true;
+	private volatile int counter;
 	
-	public QuestionTaskManager(QuestionManager m) {
-		manager = new WeakReference<QuestionManager>(m);
-	}
-	
-	@Override
-	protected void onPreExecute() {
-		counter = 100;
-		super.onPreExecute();
+	public QuestionTaskManager(QuestionActivity m, int c) {
+		manager = new WeakReference<QuestionActivity>(m);
+		counter = c;
 	}
 	
 	@Override
 	protected Boolean doInBackground(Void... params) {
-		while(true) {
-		try {
-			if(counter < 0)
-				break;
-			
-			Thread.sleep(1000);
+		while(!isCancelled()) {
+			SystemClock.sleep(500);
 			counter--;
-			manager.get().update(counter);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+			publishProgress(counter);
+			Log.i("counter", isCancelled()+""+running);
 		}
 		return true;
 	}
-	
-	public void setCounter(int c) {
-		counter = c;
+		
+	@Override
+	protected void onCancelled(Boolean result) {
+		Log.i("cancel", "yes2");
+		super.onCancelled(result);
 	}
+	
+	@Override
+	protected void onCancelled() {
+		Log.i("cancel", "yes1");
+		super.onCancelled();
+	}
+	
 
 	@Override
+	protected void onProgressUpdate(Integer... values) {
+		manager.get().update(values[0]);
+		super.onProgressUpdate(values);
+	}
+	
+	@Override
 	protected void onPostExecute(Boolean result) {
-		if(result)
-			manager.get().setFinished(true);
-			manager.get().refreshListView();
-			new Handler().postDelayed(new Runnable() {
-				
-				@Override
-				public void run() {
-					manager.get().nextQuestion();
-				}
-			}, 3000);
-			
-		Log.i("task", "finished");
+		Log.i("post", "yes");
+		if(manager.get() != null)
+			manager.get().onTaskFinished();
 		super.onPostExecute(result);
 	}
 }

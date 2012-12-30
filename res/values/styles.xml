@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -35,4 +35,9 @@
         <item name="buttonBarButtonStyle">@style/ButtonBarButton</item>
     </style>
 
+    <style name="ButtonChoice">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">left</item>
+       
+    </style>
 </resources>

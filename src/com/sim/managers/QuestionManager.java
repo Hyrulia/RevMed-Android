@@ -1,21 +1,21 @@
 package com.sim.managers;
 
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.sim.dao.ChoiceDAO;
 import com.sim.dao.QuestionDAO;
 import com.sim.entities.Choice;
@@ -23,64 +23,73 @@ import com.sim.entities.Question;
 import com.sim.evamedic.MyApp;
 import com.sim.evamedic.QuestionActivity;
 import com.sim.evamedic.R;
+import com.sim.evamedic.RevisionActivity;
 import com.sim.pattern.DAOFactory;
+import com.sim.storage.LocalStorage;
+
+
+/**
+ * TODO LIST
+ * Style & theme (onFocus/onSelect, layouts, ...)
+ * Score
+ * More cleaning code
+ * Sound & effects
+ * @author Nader
+ *
+ */
 
 public class QuestionManager extends BaseAdapter {
+	
 	private int currentQuestionNumber = 0;
 	private int maxQuestion = 3;
 	private int specialityId = 1;
 	private List<Question> questions;
 	private List<Choice> choices;
-	private WeakReference<Activity> activity;
-	private ProgressBar barView;
-	private QuestionTaskManager task = new QuestionTaskManager(this);
+	private WeakReference<QuestionActivity> activity;
 	private boolean finished = false;
-	private List<Integer> index = new ArrayList<Integer>();
-
+	private int counter;
 	
-	public QuestionManager(int specId, Activity act) {
-		specialityId = specId;
-		activity = new WeakReference<Activity>(act);
-		barView = (ProgressBar) activity.get().findViewById(R.id.countDownBar);
+
+	/**
+	 * Constructor of the manager
+	 * @param specialityId
+	 * @param activity
+	 */
+	public QuestionManager(int specialityId, QuestionActivity activity) {
+		this.specialityId = specialityId;
+		this.activity = new WeakReference<QuestionActivity>(activity);
 		fetchQuestions();
 		fetchChoices();
+		this.activity.get().runTask();
 	}
 	
-	public boolean isFinished() {
-		return finished;
-	}
-
-	public void setFinished(boolean finished) {
-		this.finished = finished;
-	}
 	
-	public void run() {
-		task.execute();
-	}
-		
-	public void update(final int p) {
-		barView.setProgress(p);		
+	/**
+	 * Update de progressbar depending of nombre of questions answered
+	 * Choices will be disabled seconds left%choices
+	 * @param p Current progress
+	 */
+	public void update(int p) {
+		setCounter(p);
+		activity.get().updateProgress(p);
 		int rest = 100 / (choices.size() - 1);
 		if(p % rest == 0)
-			disableChoice();
+			disableRandomChoice();
 	}
 	
+	/**
+	 * Disable a wrong choice and refresh the list
+	 * @param c The choice to disable
+	 */
 	public void disableItem(Choice c) {
 		c.setDisabled(true);
-		refreshListView();
+		activity.get().refreshList();
 	}
-	
-	public void refreshListView() {
-		activity.get().runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				notifyDataSetChanged();
-			}
-		});
-	}
-	
-	private void disableChoice() {
+
+	/**
+	 * Disable random wrong choice
+	 */
+	private void disableRandomChoice() {
 		ArrayList<Choice> tmp = new ArrayList<Choice>();
 		for(Choice c: choices)
 			if(c.getState() == 0)
@@ -89,6 +98,10 @@ public class QuestionManager extends BaseAdapter {
 		disableItem(tmp.get(random));
 	}
 
+	/**
+	 * Fetch maxQuestion questions from the database depending of the speciality
+	 * id
+	 */
 	public void fetchQuestions() {
 		QuestionDAO dao = (QuestionDAO) DAOFactory.create(DAOFactory.QUESTION);
 		dao.open();
@@ -96,34 +109,128 @@ public class QuestionManager extends BaseAdapter {
 		dao.close();
 	}
 	
+	/**
+	 * Get the current question
+	 * @return Question
+	 */
 	public Question getCurrentQuestion() {
 		return questions.get(currentQuestionNumber);
 	}
 	
+	/**
+	 * Fetch all choices from database by question id
+	 */
 	public void fetchChoices() {
+		((TextView) activity.get().findViewById(R.id.questionView))
+			.setText(getCurrentQuestion().getQuestion());
 		ChoiceDAO dao = (ChoiceDAO) DAOFactory.create(DAOFactory.CHOICE);
 		dao.open();
-		Log.i("Specid", specialityId+"");
-		Log.i("CurrentQuestion", currentQuestionNumber+"");
-		Log.i("Question", questions.size() + "");
 		choices = dao.getByQuestionId(questions.get(currentQuestionNumber)
 			.getId());
 		dao.close();
 	}
+	/**
+	 * Start new activity Revision
+	 */
+	public void ShowRevision() {
+		Intent intent = new Intent(activity.get(), RevisionActivity.class);
+		intent.putExtra("question", getCurrentQuestion().getQuestion());
+		intent.putExtra("choice", getCorrectChoice().getChoice());
+		intent.putExtra("questionId", getCurrentQuestion().getId());
+		activity.get().startRevisionActivity(intent);
+	}
 	
+	/**
+	 * 
+	 * @return The correct choice
+	 */
+	public Choice getCorrectChoice() {
+		for(Choice c: choices)
+			if(c.getState() == 1)
+				return c;
+		return null;
+	}
+	
+	/**
+	 * Go to the next question
+	 */
 	public void nextQuestion() {
 		currentQuestionNumber++;
-		task = new QuestionTaskManager(this);
 		if(currentQuestionNumber < maxQuestion) {
 			finished = false;
-			index.clear();
 			fetchChoices();
-			refreshListView();
-			this.run();
+			activity.get().newTask();
+			activity.get().runTask();
+			activity.get().refreshList();
 		} else {
 			//TODO score here
 		}
 	}
+
+	/**
+	 * Save states of the manager when the activity is paused
+	 */
+	public void save() {
+		if(!isFinished()) {
+			Log.i("save", "y");
+			LocalStorage.setInt("counter", getCounter());
+		}
+	}
+	
+	/**
+	 * Load states
+	 */
+	public void load() {
+		if(!isFinished()) {
+			Log.i("load", "y");
+			activity.get().newTask(LocalStorage.getInt("counter", 100));
+			activity.get().runTask();
+		}
+	}
+	
+	/**
+	 * 
+	 * @return the number of wrong choices left
+	 */
+	public int choiceRemaining() {
+		int x = 0;
+		for(Choice c: choices)
+			if(!c.isDisabled())
+				x++;
+		return x;
+	}
+	
+	/**
+	 * When a choice has been clicked
+	 * @param idx The position of the choice
+	 */
+	public void onClickItem(int idx) {
+		Log.i("index", idx+"");
+		if(choices.get(idx).getState() == 0) {
+			Log.i("state", " == 0");
+			disableItem(choices.get(idx));
+			setCounter((choiceRemaining() - 1) * 100 / (choices.size() - 1));
+			Sound.wrong();
+		} else {
+			Log.i("state", " != 0");
+			Sound.correct();
+			setFinished(true);
+		}
+	}
+	
+	public void onTaskFinished() {
+		setFinished(true);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				ShowRevision();
+			}
+		}, 3000);		
+	}
+		
+	/*
+	 *  Adapter overrided functions starts
+	 */
 	
 	@Override
 	public int getCount() {		
@@ -141,44 +248,63 @@ public class QuestionManager extends BaseAdapter {
 	}
 	
 	@Override
-	public View getView(int arg0, View arg1, ViewGroup arg2) {
-		TextView view = new TextView(MyApp.getContext());
+	public View getView(final int arg0, View arg1, ViewGroup arg2) {
+		LayoutInflater inflater = (LayoutInflater) MyApp.getContext()
+				.getSystemService("layout_inflater");
+		Button view = (Button) inflater.inflate(R.layout.choice_layout, null);
 		if(finished) {
 			if(choices.get(arg0).getState() == 1)
 				view.setBackgroundResource(R.drawable.choice_shape_true);
-			else {
+			else 
 				view.setBackgroundResource(R.drawable.choice_shape_false);
 				view.setEnabled(false);
-				view.setClickable(false);
-			}
-		} else {
-			if(!choices.get(arg0).isDisabled()) {
-				view.setBackgroundResource(R.drawable.textshape);
-			} else {
+		} else
+			if(choices.get(arg0).isDisabled()) {
 				view.setBackgroundResource(R.drawable.choice_shape_false);
 				view.setEnabled(false);
-				view.setClickable(false);
 			}
-		}
+			else
+				view.setBackgroundResource(R.drawable.button_choice_selector);
 		view.setText(choices.get(arg0).getChoice());
+		view.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				onClickItem(arg0);
+				
+			}
+		});
 		return view;
 	}
+	
+	/*
+	 * Adapter overrided function ends.
+	 */
 
-	public int choiceRemaining() {
-		int x = 0;
-		for(Choice c: choices)
-			if(!c.isDisabled())
-				x++;
-		return x;
+	
+	/*
+	 * Getters and Setters here
+	 */
+	
+	public boolean isFinished() {
+		return finished;
+	}
+
+	
+	public void setFinished(boolean finished) {
+		activity.get().refreshList();
+		this.finished = finished;
+	}
+
+
+	public int getCounter() {
+		return counter;
+	}
+
+
+	public void setCounter(int counter) {
+		this.counter = counter;
 	}
 	
-	public void onClickItem(int idx, View v) {
-		if(!index.contains(idx)) {
-			index.add(idx);
-			if(choices.get(idx).getState() == 0) {
-				disableItem(choices.get(idx));
-				task.setCounter((choiceRemaining() - 1) * 100 / (choices.size() - 1));
-			}
-		}	
-	}
+	
 }

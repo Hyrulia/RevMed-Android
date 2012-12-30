@@ -1,6 +1,4 @@
 package com.sim.evamedic;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,10 +6,13 @@ import android.content.Context;
 
 public class MyApp extends Application {
 
-	private Map<String, String> vars = new HashMap<String, String>();
-
-	public Map<String, String> getVars() {
-		return vars;
+private static boolean soundEnable = true;
+	
+	public static boolean isSoundEnable() {
+		return soundEnable;
+	}
+	public static void setSoundEnable(boolean soundEnable) {
+		MyApp.soundEnable = soundEnable;
 	}
 	
 	private static Context context; 
