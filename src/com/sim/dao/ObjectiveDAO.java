@@ -21,7 +21,7 @@ public class ObjectiveDAO extends DAO<Choice> {
 		Cursor crs = db.query(TABLE_NAME, 
 			new String[] {ID, OBJECTIVE, SPECIALITY_ID},
 			SPECIALITY_ID + "=" + id, 
-			null, null, null, "RANDOM()");
+			null, null, null, null);
 
 		 List<Objective> choices = new ArrayList<Objective>();
 		

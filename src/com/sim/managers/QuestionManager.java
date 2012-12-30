@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.sim.dao.ChoiceDAO;
 import com.sim.dao.QuestionDAO;
@@ -44,8 +45,7 @@ public class QuestionManager extends BaseAdapter {
 	private List<Question> questions;
 	private List<Choice> choices;
 	private WeakReference<QuestionActivity> activity;
-	private boolean finished = false;
-	
+	private boolean validate = false;
 
 	/**
 	 * Constructor of the manager
@@ -65,7 +65,7 @@ public class QuestionManager extends BaseAdapter {
 	 * @param c The choice to disable
 	 */
 	public void disableItem(Choice c) {
-		c.setDisabled(true);
+		c.setChecked(true);
 		activity.get().refreshList();
 	}
 
@@ -128,12 +128,16 @@ public class QuestionManager extends BaseAdapter {
 	public void nextQuestion() {
 		currentQuestionNumber++;
 		if(currentQuestionNumber < maxQuestion) {
-			finished = false;
+			validate = false;
 			fetchChoices();
 			activity.get().refreshList();
 		} else {
 			//TODO score here
 		}
+	}
+	
+	public void validate() {
+		validate = true;
 	}
 
 	/**
@@ -154,14 +158,14 @@ public class QuestionManager extends BaseAdapter {
 	 * 
 	 * @return the number of wrong choices left
 	 */
-	public int choiceRemaining() {
+	/*public int choiceRemaining() {
 		int x = 0;
 		for(Choice c: choices)
 			if(!c.isDisabled())
 				x++;
 		return x;
 	}
-	
+	*/
 	/**
 	 * When a choice has been clicked
 	 * @param idx The position of the choice
@@ -177,17 +181,7 @@ public class QuestionManager extends BaseAdapter {
 			Sound.correct();
 		}
 	}
-	
-	public void onTaskFinished() {
-		setFinished(true);
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				ShowRevision();
-			}
-		}, 3000);		
-	}
-		
+			
 	/*
 	 *  Adapter overrided functions starts
 	 */
@@ -211,18 +205,50 @@ public class QuestionManager extends BaseAdapter {
 	public View getView(final int position, View arg1, ViewGroup arg2) {
 		LayoutInflater inflater = (LayoutInflater) MyApp.getContext()
 				.getSystemService("layout_inflater");
-		Button view = (Button) inflater.inflate(R.layout.choice_layout, null);
+		View view = inflater.inflate(R.layout.choice_layout, null);
+		Button choiceButton = (Button) view.findViewById(R.id.choiceButton);
 		
-			if(choices.get(position).isDisabled()) {
-				if(choices.get(position).getState() == 1)
-					view.setBackgroundResource(R.drawable.choice_shape_true);
-				else
-					view.setBackgroundResource(R.drawable.choice_shape_false);
-			} else 			
-				view.setBackgroundResource(R.drawable.button_choice_selector);
+		if(validate) {
+			ImageView choiceState = (ImageView) view.findViewById(R.id.choiceState);
+			choiceState.setVisibility(View.VISIBLE);
 			
-		view.setText(choices.get(position).getChoice());
-		view.setOnClickListener(new OnClickListener() {
+			if(choices.get(position).isChecked()) 
+				if(choices.get(position).getState() == 1) {
+					choiceButton.setBackgroundResource(R.drawable.choice_shape_true);
+					choiceState.setImageResource(R.drawable.img_correct);
+				} else {
+					choiceButton.setBackgroundResource(R.drawable.choice_shape_false);
+					choiceState.setImageResource(R.drawable.img_wrong);
+				}
+			else
+				if(choices.get(position).getState() == 1) {
+					choiceButton.setBackgroundResource(R.drawable.choice_shape_true);
+					choiceState.setImageResource(R.drawable.img_wrong);
+				}/*
+			if(choices.get(position).getState() == 1) {
+				choiceButton.setBackgroundResource(R.drawable.choice_shape_true);
+				if(choices.get(position).isChecked()) 
+					choiceState.setImageResource(R.drawable.img_correct);
+				else
+					choiceState.setImageResource(R.drawable.img_wrong);
+			} else {
+				choiceButton.setBackgroundResource(R.drawable.choice_shape_false);
+				if(choices.get(position).isChecked()) 
+					choiceState.setImageResource(R.drawable.img_wrong);
+				else
+					choiceState.setImageResource(R.drawable.img_correct);
+			}*/
+			
+			choiceButton.setEnabled(false);
+			
+		}
+		else
+			if(choices.get(position).isChecked())
+				choiceButton.setBackgroundResource(R.drawable.choice_shape_checked);
+		
+			
+		choiceButton.setText(choices.get(position).getChoice());
+		choiceButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -240,15 +266,5 @@ public class QuestionManager extends BaseAdapter {
 	/*
 	 * Getters and Setters here
 	 */
-	
-	public boolean isFinished() {
-		return finished;
-	}
-	
-	public void setFinished(boolean finished) {
-		this.finished = finished;
-	}
-
-	
 	
 }

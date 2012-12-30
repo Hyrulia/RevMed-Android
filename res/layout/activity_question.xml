@@ -6,28 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-    <RelativeLayout 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2">
+
             	
-    	<TextView
-    	    android:id="@+id/questionView"
-    	    android:layout_width="match_parent"
-    	    android:layout_height="match_parent"
-    	    android:layout_margin="5dip"
-    	    android:background="@drawable/question_shape"
-    	    android:text="@string/question"
-    	    android:textAppearance="?android:attr/textAppearanceLarge"
-    	    android:textColor="#ffffff" />
-
-	</RelativeLayout>
-
+   	<TextView
+   	    android:id="@+id/questionView"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="0dp"
+   	    android:layout_margin="5dip"
+   	    android:background="@drawable/question_shape"
+   	    android:text="@string/question"
+   	    android:layout_weight="1.5"
+   	    android:textAppearance="?android:attr/textAppearanceLarge"
+   	    android:textColor="#ffffff" />
+   	
 	 <ListView
-	     android:id="@+id/choicesList"
+	    android:id="@+id/choicesList"
      	android:layout_width="match_parent"
-     	android:layout_height="match_parent"
+     	android:layout_height="0dp"
      	android:dividerHeight="3dip"
-     	android:layout_weight="1" />
+     	android:layout_weight="2" />
+
+	 <RelativeLayout
+	     android:layout_width="match_parent"
+	     android:layout_height="0dp"
+	     android:layout_weight="0.5" >
+
+	     <Button
+	         android:id="@+id/validateButton"
+	         android:layout_width="100dp"
+	         android:layout_height="match_parent"
+	         android:layout_alignParentRight="true"
+	         android:layout_alignParentTop="true"
+	         android:text="Valider" />
+
+	     <Button
+	         android:id="@+id/revisionButton"
+	         android:layout_width="100dp"
+	         android:layout_height="match_parent"
+	         android:layout_alignParentRight="true"
+	         android:layout_alignParentTop="true"
+	         android:text="Revision"
+	         android:visibility="invisible" />
+
+	 </RelativeLayout>
    
 </LinearLayout>

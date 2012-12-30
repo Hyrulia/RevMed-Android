@@ -1,8 +1,24 @@
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/button_choice_selector"
-    style="@style/ButtonChoice" >
+    android:layout_height="match_parent">
+    
+    <Button
+        style="@style/ButtonChoice"
+        android:id="@+id/choiceButton"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/button_choice_selector"
+         />
 
-</Button>
+    <ImageView
+        android:id="@+id/choiceState"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:visibility="invisible" />
+
+</RelativeLayout>
+
