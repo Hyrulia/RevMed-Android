@@ -63,8 +63,26 @@ public class QuestionActivity extends Activity {
 	
 	@Override
 	public void onBackPressed() {
-		
-		super.onBackPressed();
+		AlertDialog dialog = new AlertDialog.Builder(this)
+		.setTitle("Evamedic")
+		.setMessage("Voulez-vous vraiment quitter l'application?")
+		.setPositiveButton("Oui", new AlertDialog.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				QuestionActivity.super.onBackPressed();
+				
+			}
+		})
+		.setNegativeButton("Non", new AlertDialog.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();				
+			}
+		})
+		.create();		
+		dialog.show();
 	}
 
 	@Override
