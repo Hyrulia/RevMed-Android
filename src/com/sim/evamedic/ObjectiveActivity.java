@@ -5,6 +5,9 @@ import com.sim.managers.ObjectiveManager;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -36,17 +39,47 @@ public class ObjectiveActivity extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				Objective o = (Objective) manager.getItem(arg2);
-				Intent intent = new Intent(ObjectiveActivity.this, 
+				final Intent intent = new Intent(ObjectiveActivity.this, 
 						QuestionActivity.class);
 				intent.putExtra("objId", o.getId());
 				intent.putExtra("objective", o.getObjective());
 				intent.putExtra("specId", specId);
 				intent.putExtra("speciality", speciality);
 				
-				startActivity(intent);
+				AlertDialog dialog = new AlertDialog.Builder(ObjectiveActivity.this)
+				.setSingleChoiceItems(new String[]{"5 questions", "10 questions"
+						, "15 questions"}, 0, new OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						int nbQuestion = new int[]{5, 10, 15}[which];
+						intent.putExtra("nbQuestion", nbQuestion);
+					}
+					
+				})
+				.setPositiveButton("Ok", new OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						startActivity(intent);	
+						finish();
+					}
+				})
+				.setNegativeButton("Cancel", new OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();						
+					}
+				})
+				.setTitle("Nombre de questions")
+				.create();
+				dialog.show();
 			}
 		});
 	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

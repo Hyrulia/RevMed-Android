@@ -3,8 +3,6 @@ package com.sim.managers;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import android.content.Intent;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.sim.dao.ChoiceDAO;
 import com.sim.dao.QuestionDAO;
 import com.sim.entities.Choice;
@@ -40,26 +37,44 @@ import com.sim.pattern.DAOFactory;
 public class QuestionManager extends BaseAdapter {
 	
 	private int currentQuestionNumber = 0;
-	private int maxQuestion = 3;
+	private int maxQuestion = 0;
 	private int objectiveId = 1;
 	private List<Question> questions;
 	private List<Choice> choices;
 	private WeakReference<QuestionActivity> activity;
 	private boolean validate = false;
+	private float score = 0;
 
 	/**
 	 * Constructor of the manager
 	 * @param specialityId
 	 * @param activity
 	 */
-	public QuestionManager(int objectiveId, QuestionActivity activity) {
+	public QuestionManager(int objectiveId, int max,QuestionActivity activity) {
 		this.objectiveId = objectiveId;
 		this.activity = new WeakReference<QuestionActivity>(activity);
+		setMaxQuestion(max);
 		fetchQuestions();
 		fetchChoices();
+		this.activity.get().refreshQuestion(getCurrentQuestion().getQuestion());
 	}
 	
-	
+	public int getCurrentQuestionNumber() {
+		return currentQuestionNumber;
+	}
+
+	public void setCurrentQuestionNumber(int currentQuestionNumber) {
+		this.currentQuestionNumber = currentQuestionNumber;
+	}
+
+	public int getObjectiveId() {
+		return objectiveId;
+	}
+
+	public void setObjectiveId(int objectiveId) {
+		this.objectiveId = objectiveId;
+	}
+
 	/**
 	 * Disable a wrong choice and refresh the list
 	 * @param c The choice to disable
@@ -92,8 +107,6 @@ public class QuestionManager extends BaseAdapter {
 	 * Fetch all choices from database by question id
 	 */
 	public void fetchChoices() {
-		((TextView) activity.get().findViewById(R.id.questionView))
-			.setText(getCurrentQuestion().getQuestion());
 		ChoiceDAO dao = (ChoiceDAO) DAOFactory.create(DAOFactory.CHOICE);
 		dao.open();
 		choices = dao.getByQuestionId(questions.get(currentQuestionNumber)
@@ -129,15 +142,19 @@ public class QuestionManager extends BaseAdapter {
 		currentQuestionNumber++;
 		if(currentQuestionNumber < maxQuestion) {
 			validate = false;
+			activity.get().refreshQuestion(getCurrentQuestion().getQuestion());
+			activity.get().updateTitle();
 			fetchChoices();
-			activity.get().refreshList();
-		} else {
-			//TODO score here
-		}
+				activity.get().refreshList();
+		} else 
+			activity.get().SaveScore(score);
+		
 	}
 	
 	public void validate() {
 		validate = true;
+		calculateScore();
+		activity.get().updateScore(score);
 	}
 
 	/**
@@ -171,15 +188,22 @@ public class QuestionManager extends BaseAdapter {
 	 * @param idx The position of the choice
 	 */
 	public void onClickItem(int idx) {
-		Log.i("index", idx+"");
 		disableItem(choices.get(idx));
-		if(choices.get(idx).getState() == 0) {
-			Log.i("state", " == 0");
-			Sound.wrong();
-		} else {
-			Log.i("state", " == 1");
-			Sound.correct();
+		Sound.correct();
+	}
+	
+	public void calculateScore() {
+		int totalCorrect = correctChoices();
+		int correct = 0;
+		int wrong = 0;
+		for(Choice c: choices) {
+			if(c.isChecked())
+				if(c.getState() == 1)
+					correct++;
+				else
+					wrong++;			
 		}
+		score += (float)( correct * (1 / (float)totalCorrect) ) * ( 1 / (float)(wrong + 1) );
 	}
 			
 	/*
@@ -201,11 +225,19 @@ public class QuestionManager extends BaseAdapter {
 		return arg0;
 	}
 	
+	public int correctChoices() {
+		int s = 0;
+		for(Choice c: choices)
+			if(c.getState() == 1)
+				s++;
+		return s;
+	}
+	
 	@Override
 	public View getView(final int position, View arg1, ViewGroup arg2) {
 		LayoutInflater inflater = (LayoutInflater) MyApp.getContext()
 				.getSystemService("layout_inflater");
-		View view = inflater.inflate(R.layout.choice_layout, null);
+		View view = inflater.inflate(R.layout.item_choice, null);
 		Button choiceButton = (Button) view.findViewById(R.id.choiceButton);
 		
 		if(validate) {
@@ -224,23 +256,8 @@ public class QuestionManager extends BaseAdapter {
 				if(choices.get(position).getState() == 1) {
 					choiceButton.setBackgroundResource(R.drawable.choice_shape_true);
 					choiceState.setImageResource(R.drawable.img_wrong);
-				}/*
-			if(choices.get(position).getState() == 1) {
-				choiceButton.setBackgroundResource(R.drawable.choice_shape_true);
-				if(choices.get(position).isChecked()) 
-					choiceState.setImageResource(R.drawable.img_correct);
-				else
-					choiceState.setImageResource(R.drawable.img_wrong);
-			} else {
-				choiceButton.setBackgroundResource(R.drawable.choice_shape_false);
-				if(choices.get(position).isChecked()) 
-					choiceState.setImageResource(R.drawable.img_wrong);
-				else
-					choiceState.setImageResource(R.drawable.img_correct);
-			}*/
-			
-			choiceButton.setEnabled(false);
-			
+				}
+				choiceButton.setEnabled(false);	
 		}
 		else
 			if(choices.get(position).isChecked())
@@ -266,5 +283,13 @@ public class QuestionManager extends BaseAdapter {
 	/*
 	 * Getters and Setters here
 	 */
+	
+	public int getMaxQuestion() {
+		return maxQuestion;
+	}
+
+	public void setMaxQuestion(int maxQuestion) {
+		this.maxQuestion = maxQuestion;
+	}
 	
 }

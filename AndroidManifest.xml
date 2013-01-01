@@ -26,11 +26,6 @@
         <activity
             android:name="com.sim.evamedic.QuestionActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.sim.evamedic.RevisionActivity"
@@ -45,6 +40,10 @@
         <activity
             android:name="com.sim.evamedic.ObjectiveActivity"
             android:label="@string/title_activity_objective" >
+        </activity>
+        <activity
+            android:name="com.sim.evamedic.ScoreActivity"
+            android:label="@string/title_activity_score" >
         </activity>
     </application>
 

@@ -6,11 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.sim.dao.ObjectiveDAO;
-import com.sim.dao.SpecialityDAO;
 import com.sim.entities.Objective;
-import com.sim.entities.Speciality;
 import com.sim.evamedic.MyApp;
 import com.sim.evamedic.R;
 import com.sim.pattern.DAOFactory;
