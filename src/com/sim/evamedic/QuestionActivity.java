@@ -15,17 +15,17 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class QuestionActivity extends Activity {
 
-	QuestionManager manager;
-	ProgressBar bar;
-	TextView score;
-	TextView question;
-	private View validate;
-	private View revision;
+	private QuestionManager manager;
+	private ShakeSensor sensor;
+	private TextView score;
+	private TextView question;
+	private Button validate;
+	private TextView revision;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,6 +35,7 @@ public class QuestionActivity extends Activity {
 				getIntent().getIntExtra("objId", 1),
 				getIntent().getIntExtra("nbQuestion", 5), 
 				this);
+		sensor = new ShakeSensor(this);
 		setTitle("Question N°" + (manager.getCurrentQuestionNumber() + 1));
 		ListView choiceList = (ListView) findViewById(R.id.choicesList);
 		validate = (Button) findViewById(R.id.validateButton);
@@ -47,6 +48,7 @@ public class QuestionActivity extends Activity {
 			public void onClick(View v) {
 				manager.validate();
 				refreshList();
+				sensor.start();
 				validate.setVisibility(View.INVISIBLE);
 				revision.setVisibility(View.VISIBLE);
 			}
@@ -117,6 +119,16 @@ public class QuestionActivity extends Activity {
 	public void refreshQuestion(String question) {
 		if(this.question != null)
 		this.question.setText(question);
+	}
+	
+	@Override
+	protected void onPause() {
+		sensor.Pause();
+		super.onPause();
+	}
+	
+	public void onShake() {
+		manager.ShowRevision();
 	}
 
 	public void refreshList() {

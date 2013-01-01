@@ -20,7 +20,6 @@ public class RevisionActivity extends Activity {
 		setContentView(R.layout.activity_revision);
 		overridePendingTransition(R.anim.stretch,R.anim.shrink);
 		TextView revision = (TextView) findViewById(R.id.revisionText);
-		TextView question = (TextView) findViewById(R.id.questionText);
 		Button backBt = (Button) findViewById(R.id.back);
 		
 		RevisionDAO dao = (RevisionDAO) DAOFactory.create(DAOFactory.REVISION);
@@ -29,7 +28,6 @@ public class RevisionActivity extends Activity {
 			.getIntExtra("questionId", 1));
 		dao.close();
 		revision.setText(r.getRevision());
-		question.setText(getIntent().getStringExtra("question"));
 		
 		backBt.setOnClickListener(new OnClickListener() {
 			
