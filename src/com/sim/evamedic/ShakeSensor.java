@@ -33,13 +33,14 @@ public class ShakeSensor implements SensorEventListener {
 
 
 	public void start() {
-		mSensorManager.registerListener(this, 
+		if(!mSensorManager.registerListener(this, 
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 
-				SensorManager.SENSOR_DELAY_NORMAL);
+				SensorManager.SENSOR_DELAY_NORMAL))
+			pause();
 	}
 
 
-	public void Pause() {
+	public void pause() {
 		mSensorManager.unregisterListener(this);
 	}
 

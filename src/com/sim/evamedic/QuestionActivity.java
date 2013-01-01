@@ -123,7 +123,7 @@ public class QuestionActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		sensor.Pause();
+		sensor.pause();
 		super.onPause();
 	}
 	
