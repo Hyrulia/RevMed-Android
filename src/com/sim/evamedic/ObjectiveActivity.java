@@ -22,7 +22,7 @@ public class ObjectiveActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_objective);
-		
+		setTitle("Objectifs");
 		final int specId = getIntent().getIntExtra("specId", 1);
 		final String speciality = getIntent().getStringExtra("speciality");
 		

@@ -19,6 +19,7 @@ public class SpecialityActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_speciality);
+		setTitle("Spécialités");
 		MyApp.setContext(getApplicationContext());
 		manager = new SpecialityManager();
 		manager.fetchSpecialities();

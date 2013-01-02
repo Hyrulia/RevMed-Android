@@ -1,27 +1,29 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ObjectiveActivity" >
+    tools:context=".ObjectiveActivity" 
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/specialityText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="22dp"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_width="264dp"
+        android:layout_height="157dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/img_tableau"
+        android:paddingLeft="75dp"
+        android:paddingTop="55dp"
+        android:text="text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/white" />
 
     <ListView
         android:id="@+id/objectiveList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/specialityText"
-        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:layout_margin="21dp" >
     </ListView>
 
-</RelativeLayout>
+</LinearLayout>

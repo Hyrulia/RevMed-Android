@@ -4,16 +4,6 @@
     android:layout_height="match_parent"
     tools:context=".Revision" >
 
-    <TextView
-        android:id="@+id/questionText"
-        android:textColor="#ffffff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/question_shape"
-        android:text="@string/hello_world" />
 
     <Button
         android:id="@+id/back"
@@ -23,22 +13,21 @@
         android:layout_alignParentRight="true"
         android:text="Question suivante" />
 
-    <ScrollView
+   <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_above="@id/back"
-        android:background="@drawable/choice_shape_default"
+        android:background="@drawable/img_fiche_1"
         android:layout_margin="5dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/questionText" >
-
-        <TextView
-            android:id="@+id/revisionText"
-            android:textColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:maxLines="20"
+        android:text="Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:scrollbars="vertical"
+        android:id="@+id/revisionText"
+        android:textColor="@color/black"
              />
-    </ScrollView>
+  
 
 </RelativeLayout>

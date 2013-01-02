@@ -18,6 +18,7 @@ public class RevisionActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_revision);
+		setTitle("Revision et Astuces");
 		overridePendingTransition(R.anim.stretch,R.anim.shrink);
 		TextView revision = (TextView) findViewById(R.id.revisionText);
 		Button backBt = (Button) findViewById(R.id.back);
