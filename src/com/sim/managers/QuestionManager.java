@@ -44,6 +44,8 @@ public class QuestionManager extends BaseAdapter {
 	private WeakReference<QuestionActivity> activity;
 	private boolean validate = false;
 	private float score = 0;
+	LayoutInflater inflater = (LayoutInflater) MyApp.getContext()
+			.getSystemService("layout_inflater");
 
 	/**
 	 * Constructor of the manager
@@ -235,8 +237,7 @@ public class QuestionManager extends BaseAdapter {
 	
 	@Override
 	public View getView(final int position, View arg1, ViewGroup arg2) {
-		LayoutInflater inflater = (LayoutInflater) MyApp.getContext()
-				.getSystemService("layout_inflater");
+		
 		View view = inflater.inflate(R.layout.item_choice, null);
 		Button choiceButton = (Button) view.findViewById(R.id.choiceButton);
 		

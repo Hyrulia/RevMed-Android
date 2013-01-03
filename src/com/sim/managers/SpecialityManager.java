@@ -2,20 +2,26 @@ package com.sim.managers;
 
 
 import java.util.List;
+
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import com.sim.dao.SpecialityDAO;
+import com.sim.entities.Objective;
 import com.sim.entities.Speciality;
 import com.sim.evamedic.MyApp;
 import com.sim.evamedic.R;
 import com.sim.pattern.DAOFactory;
 
-public class SpecialityManager extends BaseAdapter{
+public class SpecialityManager extends BaseExpandableListAdapter{
 
 	private List<Speciality> specialities;
-	
+	LayoutInflater inflater = (LayoutInflater) MyApp.getContext()
+			.getSystemService("layout_inflater");
 	public SpecialityManager() {
 		
 	}
@@ -28,28 +34,64 @@ public class SpecialityManager extends BaseAdapter{
 		dao.close();
 	}
 
+	@Override
+	public Object getChild(int arg0, int arg1) {
+		return specialities.get(arg0).getObjectives().get(arg1);
+	}
 
-	
 	@Override
-	public int getCount() {		
-		return specialities.size();
+	public long getChildId(int arg0, int arg1) {
+		
+		return arg1;
 	}
-	
+
 	@Override
-	public Object getItem(int arg0) {
-		return specialities.get(arg0);
-	}
-	
-	@Override
-	public long getItemId(int arg0) {
-		return arg0;
-	}
-	
-	@Override
-	public View getView(int arg0, View arg1, ViewGroup arg2) {
-		TextView view = new TextView(MyApp.getContext());
-		view.setBackgroundResource(R.drawable.button_choice_selector);
-		view.setText(specialities.get(arg0).getSpeciality());
+	public View getChildView(int arg0, int arg1, boolean arg2, View arg3,
+			ViewGroup arg4) {
+		View view = inflater.inflate(R.layout.item_objective, null);
+		TextView text = (TextView) view.findViewById(R.id.objectiveItem);
+		Objective o = (Objective) getChild(arg0, arg1);
+		text.setText(o.getObjective());
 		return view;
 	}
+
+	@Override
+	public int getChildrenCount(int arg0) {
+		
+		return specialities.get(arg0).getObjectives().size();
+	}
+
+	@Override
+	public Object getGroup(int arg0) {
+		return specialities.get(arg0);
+	}
+
+	@Override
+	public int getGroupCount() {
+		return specialities.size();
+	}
+
+	@Override
+	public long getGroupId(int arg0) {
+		return arg0;
+	}
+
+	@Override
+	public View getGroupView(int arg0, boolean arg1, View arg2, ViewGroup arg3) {
+		View view = inflater.inflate(R.layout.item_speciality, null);
+		TextView text = (TextView) view.findViewById(R.id.specialityItem);
+		text.setText(specialities.get(arg0).getSpeciality());
+		return view;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return false;
+	}
+
+	@Override
+	public boolean isChildSelectable(int arg0, int arg1) {
+		return true;
+	}
+
 }

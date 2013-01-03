@@ -16,16 +16,20 @@ public class SpecialityDAO extends DAO<Speciality>{
 	public ArrayList<Speciality> getAll() {
 		Cursor crs = db.query(TABLE_NAME, 
 			new String[] { ID, SPECIALITY},
-			null, null, null, null, null);
-
+			null, null, null, null, SPECIALITY);
+		
+		ObjectiveDAO dao = new ObjectiveDAO();
+		dao.open();
 		ArrayList<Speciality> specialities = new ArrayList<Speciality>();
 		while(crs.moveToNext()) {
 			Speciality s = new Speciality();
 			s.setId(crs.getInt(crs.getColumnIndex(ID)));
 			s.setSpeciality(crs.getString(crs.getColumnIndex(SPECIALITY)));
+			s.setObjectives(dao.getBySpecialityId(s.getId()));
 			specialities.add(s);
 		}
 		crs.close();
+		dao.close();
 		return specialities;		
 	}
 

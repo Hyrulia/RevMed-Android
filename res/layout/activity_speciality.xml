@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     tools:context=".SpecialyActivity" >
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/specialityList"
-        android:layout_width="228dp"
-        android:layout_height="286dp"
-        android:dividerHeight="5dip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:dividerHeight="2dp"
         android:layout_centerVertical="true" >
-    </ListView>
+    </ExpandableListView>
 
 </RelativeLayout>

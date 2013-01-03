@@ -1,15 +1,22 @@
 package com.sim.evamedic;
 
+import com.sim.entities.Objective;
 import com.sim.entities.Speciality;
 import com.sim.managers.SpecialityManager;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 
 public class SpecialityActivity extends Activity {
@@ -23,26 +30,62 @@ public class SpecialityActivity extends Activity {
 		MyApp.setContext(getApplicationContext());
 		manager = new SpecialityManager();
 		manager.fetchSpecialities();
-		ListView list = (ListView) findViewById(R.id.specialityList);
+		ExpandableListView list = (ExpandableListView) 
+				findViewById(R.id.specialityList);
 		list.setAdapter(manager);
-		
-		list.setOnItemClickListener(new OnItemClickListener() {
-
+		list.setGroupIndicator(null);
+		list.setOnChildClickListener(new OnChildClickListener() {
+			
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				Speciality s = (Speciality) manager.getItem(arg2);
-				Intent intent = new Intent(SpecialityActivity.this, 
-					ObjectiveActivity.class);
+			public boolean onChildClick(ExpandableListView parent, View arg1, int groupPosition,
+					int childPostion, long id) {
+		
+				Objective o = (Objective) manager.getChild(groupPosition, childPostion);
+				Speciality s = (Speciality) manager.getGroup(groupPosition);
+				Log.i("click", "yes");
+				final Intent intent = new Intent(SpecialityActivity.this, 
+						QuestionActivity.class);
+				intent.putExtra("objId", o.getId());
+				intent.putExtra("objective", o.getObjective());
 				intent.putExtra("specId", s.getId());
 				intent.putExtra("speciality", s.getSpeciality());
-				startActivity(intent);
-				finish();
+				
+				AlertDialog dialog = new AlertDialog.Builder(SpecialityActivity.this)
+				.setSingleChoiceItems(new String[]{"5 questions", "10 questions"
+						, "15 questions"}, 0, new OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						int nbQuestion = new int[]{5, 10, 15}[which];
+						intent.putExtra("nbQuestion", nbQuestion);
+					}
+					
+				})
+				.setPositiveButton("Ok", new OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						startActivity(intent);	
+						finish();
+					
+					}
+				})
+				.setNegativeButton("Cancel", new OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();						
+					}
+				})
+				.setTitle("Nombre de questions")
+				.create();
+				dialog.show();
+			return true;
 			}
 		});
 	}
-
-
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
