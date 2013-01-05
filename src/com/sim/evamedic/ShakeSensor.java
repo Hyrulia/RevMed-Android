@@ -53,7 +53,7 @@ public class ShakeSensor implements SensorEventListener {
 		mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
 		float delta = mAccelCurrent - mAccelLast;
 		mAccel = mAccel * 0.9f + delta; // perform low-cut filter
-		if(mAccel > 2) 
+		if(mAccel > 1.5) 
 			if(activity.get() != null)
 				activity.get().onShake();
 		Log.i("sha", "y");

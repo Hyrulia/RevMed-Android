@@ -49,6 +49,7 @@ public class SpecialityActivity extends Activity {
 				intent.putExtra("objective", o.getObjective());
 				intent.putExtra("specId", s.getId());
 				intent.putExtra("speciality", s.getSpeciality());
+				intent.putExtra("mode", getIntent().getIntExtra("mode", 0));
 				
 				AlertDialog dialog = new AlertDialog.Builder(SpecialityActivity.this)
 				.setSingleChoiceItems(new String[]{"5 questions", "10 questions"
@@ -67,7 +68,6 @@ public class SpecialityActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						startActivity(intent);	
 						finish();
-					
 					}
 				})
 				.setNegativeButton("Cancel", new OnClickListener() {

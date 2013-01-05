@@ -1,9 +1,16 @@
 package com.sim.evamedic;
 
+import java.lang.ref.WeakReference;
+
 import com.sim.entities.Score;
-import com.sim.managers.QuestionManager;
+import com.sim.managers.ExamManager;
+import com.sim.managers.RevisionManager;
 import com.sim.managers.ScoreManager;
+import com.sim.storage.LocalStorage;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,28 +26,48 @@ import android.widget.TextView;
 
 public class QuestionActivity extends Activity {
 
-	private QuestionManager manager;
+	private RevisionManager manager;
 	private ShakeSensor sensor;
 	private TextView score;
+	private TextView timer;
 	private TextView question;
 	private Button validate;
 	private TextView revision;
+	private int mode = 0;
+	private TimerTask task;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_question);
 		question = (TextView) findViewById(R.id.questionView);
-		manager = new QuestionManager(
-				getIntent().getIntExtra("objId", 1),
-				getIntent().getIntExtra("nbQuestion", 5), 
-				this);
+		mode = getIntent().getIntExtra("mode", 0);	
 		sensor = new ShakeSensor(this);
-		setTitle("Question N°" + (manager.getCurrentQuestionNumber() + 1));
+		
 		ListView choiceList = (ListView) findViewById(R.id.choicesList);
 		validate = (Button) findViewById(R.id.validateButton);
 		revision = (Button) findViewById(R.id.revisionButton);
 		score = (TextView) findViewById(R.id.ScoreText);
+		timer = (TextView) findViewById(R.id.timerText);
+		
+		if(mode == 0) {
+			manager = new ExamManager(
+					getIntent().getIntExtra("objId", 1),
+					getIntent().getIntExtra("nbQuestion", 5), 
+					this);
+			task = new TimerTask(this, getIntent().getIntExtra("nbQuestion", 5));
+			task.execute();
+			
+		} else {
+			manager = new RevisionManager(
+					getIntent().getIntExtra("objId", 1),
+					getIntent().getIntExtra("nbQuestion", 5), 
+					this);
+			score.setVisibility(View.INVISIBLE);
+			timer.setVisibility(View.VISIBLE);
+		}
+		setTitle("Question N°" + (manager.getCurrentQuestionNumber() + 1));
 		choiceList.setAdapter(manager);
 		validate.setOnClickListener(new OnClickListener() {
 			
@@ -62,12 +89,12 @@ public class QuestionActivity extends Activity {
 			}
 		});
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		AlertDialog dialog = new AlertDialog.Builder(this)
 		.setTitle("Evamedic")
-		.setMessage("Voulez-vous vraiment quitter l'application?")
+		.setMessage("Retourner au Menu?")
 		.setPositiveButton("Oui", new AlertDialog.OnClickListener() {
 			
 			@Override
@@ -86,6 +113,13 @@ public class QuestionActivity extends Activity {
 		.create();		
 		dialog.show();
 	}
+	
+	public void validateExam() {
+		manager.validate();
+		refreshList();
+		sensor.start();
+	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,12 +131,20 @@ public class QuestionActivity extends Activity {
 	@Override
 	protected void onStop() {
 		manager.save();
+		if(task != null) {
+			LocalStorage.setInt("counter", task.getCounter());
+			task.cancel(true);
+		}
 		super.onStop();
 	}
 	
 	@Override
 	protected void onStart() {
 		manager.load();
+		if(mode == 0) {
+			task = new TimerTask(this, manager.getMaxQuestion());
+			task.execute();
+		}
 		super.onStart();
 	}
 	
@@ -168,7 +210,7 @@ public class QuestionActivity extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
 				startActivity(new Intent(QuestionActivity.this,
-						SpecialityActivity.class));
+						MenuActivity.class));
 			}
 		})
 		.setTitle("Voulez-vous enregister votre score?")
@@ -178,6 +220,13 @@ public class QuestionActivity extends Activity {
 		dialog.show();
 	}
 			
+	public void updateTimer(int timer) {
+		int seconde = timer % 60;
+		int minute = timer / 60;
+		this.timer.setText("Temps restant: " + String.format("%02d", minute) + 
+				":" + String.format("%02d", seconde));
+	}
+	
 	@SuppressLint("DefaultLocale")
 	public void updateScore(float score) {
 		String s = String.format("%.2f", score);
@@ -187,6 +236,56 @@ public class QuestionActivity extends Activity {
 	public void updateTitle() {
 		setTitle("Question N°" + (manager.getCurrentQuestionNumber() + 1));
 		
+	}
+	
+	public static class TimerTask extends AsyncTask<Void, Integer, Boolean> {
+
+		private WeakReference<QuestionActivity> activity;
+		private int counter = 100;
+		
+		public TimerTask(QuestionActivity a, int questionNb) {
+			activity = new WeakReference<QuestionActivity>(a);
+			counter = 100 * questionNb / 5; 
+		}
+		
+		
+		public int getCounter() {
+			return counter;
+		}
+
+
+		public void setCounter(int counter) {
+			this.counter = counter;
+		}
+
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			while(counter > 0 && !isCancelled()) {
+				counter--;
+				publishProgress(counter);
+				SystemClock.sleep(1000);
+			}
+			return true;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			if(activity.get() != null)
+				activity.get().updateTimer(counter);
+			super.onProgressUpdate(values);
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if(result && activity.get() != null)
+				activity.get().validateExam();
+			super.onPostExecute(result);
+		}
+
+		
+
+
 	}
 
 }

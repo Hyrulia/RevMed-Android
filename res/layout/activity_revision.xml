@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     tools:context=".Revision" >
 
-
     <Button
         android:id="@+id/back"
         android:layout_width="wrap_content"
@@ -14,20 +13,21 @@
         android:text="Question suivante" />
 
    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_above="@id/back"
-        android:background="@drawable/img_fiche_1"
-        android:layout_margin="5dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:maxLines="20"
-        android:text="Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:scrollbars="vertical"
-        android:id="@+id/revisionText"
-        android:textColor="@color/black"
-             />
-  
+       android:id="@+id/revisionText"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_above="@+id/back"
+       android:layout_alignParentLeft="true"
+       android:layout_alignParentRight="true"
+       android:layout_margin="25dp"
+       android:paddingLeft="20dp"
+       android:paddingTop="35dp"
+       android:paddingRight="45dp"
+       android:paddingBottom="10dp"
+       android:background="@drawable/img_fiche"
+       android:maxLines="10"
+       android:scrollbars="vertical"
+       android:textAppearance="?android:attr/textAppearanceMedium"
+       android:textColor="@color/black" />
 
 </RelativeLayout>

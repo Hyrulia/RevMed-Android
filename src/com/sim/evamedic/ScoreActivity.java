@@ -22,8 +22,6 @@ public class ScoreActivity extends Activity {
 		setTitle("Scores");
 		ScoreManager manager = new ScoreManager();
 		ListView list = (ListView) findViewById(R.id.scoreList);
-		
-		list.setAdapter(manager);
 		LayoutInflater inflater = (LayoutInflater) MyApp.getContext()
 				.getSystemService("layout_inflater");
 		View v = inflater.inflate(R.layout.item_score, null);
@@ -40,12 +38,13 @@ public class ScoreActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(ScoreActivity.this,
-					SpecialityActivity.class));
+					MenuActivity.class));
+				finish();
 			}
 		});
 		
 		list.addHeaderView(v);
-		
+		list.setAdapter(manager);
 	}
 
 	@Override

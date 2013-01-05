@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_speciality_selector"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#000000"
         android:textStyle="bold" />
 
 </LinearLayout>

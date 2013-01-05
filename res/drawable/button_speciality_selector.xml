@@ -5,6 +5,7 @@
           android:state_pressed="true" />
     <item android:drawable="@drawable/speciality_shape_focus"
           android:state_focused="true" />
+    
     <item android:drawable="@drawable/speciality_shape_default" />    
 
 </selector>

@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MenuActivity"
+    android:background="@drawable/img_menu" >
+
+    <Button
+        android:id="@+id/modeRevisionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/modeExamButton"
+        android:layout_centerVertical="true"
+        android:text="Mode Revision" />
+
+    <Button
+        android:id="@+id/scoreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/modeRevisionButton"
+        android:layout_alignRight="@+id/modeExamButton"
+        android:layout_below="@+id/modeExamButton"
+        android:layout_marginTop="26dp"
+        android:text="Score" />
+
+    <Button
+        android:id="@+id/modeExamButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/modeRevisionButton"
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="31dp"
+        android:text="Mode Examen" />
+
+</RelativeLayout>

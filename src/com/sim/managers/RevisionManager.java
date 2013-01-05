@@ -34,16 +34,17 @@ import com.sim.pattern.DAOFactory;
  *
  */
 
-public class QuestionManager extends BaseAdapter {
+public class RevisionManager extends BaseAdapter {
 	
-	private int currentQuestionNumber = 0;
-	private int maxQuestion = 0;
-	private int objectiveId = 1;
-	private List<Question> questions;
-	private List<Choice> choices;
-	private WeakReference<QuestionActivity> activity;
-	private boolean validate = false;
-	private float score = 0;
+	protected int currentQuestionNumber = 0;
+	protected int maxQuestion = 0;
+	protected int objectiveId = 1;
+	protected List<Question> questions;
+	protected List<Choice> choices;
+	protected WeakReference<QuestionActivity> activity;
+	protected boolean validate = false;
+	protected float score = 0;
+	
 	LayoutInflater inflater = (LayoutInflater) MyApp.getContext()
 			.getSystemService("layout_inflater");
 
@@ -52,7 +53,7 @@ public class QuestionManager extends BaseAdapter {
 	 * @param specialityId
 	 * @param activity
 	 */
-	public QuestionManager(int objectiveId, int max,QuestionActivity activity) {
+	public RevisionManager(int objectiveId, int max,QuestionActivity activity) {
 		this.objectiveId = objectiveId;
 		this.activity = new WeakReference<QuestionActivity>(activity);
 		setMaxQuestion(max);
@@ -155,8 +156,6 @@ public class QuestionManager extends BaseAdapter {
 	
 	public void validate() {
 		validate = true;
-		calculateScore();
-		activity.get().updateScore(score);
 	}
 
 	/**
@@ -174,38 +173,12 @@ public class QuestionManager extends BaseAdapter {
 	}
 	
 	/**
-	 * 
-	 * @return the number of wrong choices left
-	 */
-	/*public int choiceRemaining() {
-		int x = 0;
-		for(Choice c: choices)
-			if(!c.isDisabled())
-				x++;
-		return x;
-	}
-	*/
-	/**
 	 * When a choice has been clicked
 	 * @param idx The position of the choice
 	 */
 	public void onClickItem(int idx) {
 		disableItem(choices.get(idx));
 		Sound.correct();
-	}
-	
-	public void calculateScore() {
-		int totalCorrect = correctChoices();
-		int correct = 0;
-		int wrong = 0;
-		for(Choice c: choices) {
-			if(c.isChecked())
-				if(c.getState() == 1)
-					correct++;
-				else
-					wrong++;			
-		}
-		score += (float)( correct * (1 / (float)totalCorrect) ) * ( 1 / (float)(wrong + 1) );
 	}
 			
 	/*
