@@ -1,21 +1,20 @@
 package com.sim.evamedic;
 
 import java.lang.ref.WeakReference;
-
 import com.sim.entities.Score;
-import com.sim.managers.ExamManager;
-import com.sim.managers.RevisionManager;
+import com.sim.managers.QuestionManager;
 import com.sim.managers.ScoreManager;
 import com.sim.storage.LocalStorage;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.Settings.System;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,10 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class QuestionActivity extends Activity {
 
-	private RevisionManager manager;
+	private QuestionManager manager;
 	private ShakeSensor sensor;
 	private TextView score;
 	private TextView timer;
@@ -35,7 +35,7 @@ public class QuestionActivity extends Activity {
 	private TextView revision;
 	private int mode = 0;
 	private TimerTask task;
-	
+	private boolean paused = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,23 +50,17 @@ public class QuestionActivity extends Activity {
 		revision = (Button) findViewById(R.id.revisionButton);
 		score = (TextView) findViewById(R.id.ScoreText);
 		timer = (TextView) findViewById(R.id.timerText);
+		manager = new QuestionManager(
+				getIntent().getIntExtra("objId", 1),
+				getIntent().getIntExtra("nbQuestion", 5), 
+				this);
 		
 		if(mode == 0) {
-			manager = new ExamManager(
-					getIntent().getIntExtra("objId", 1),
-					getIntent().getIntExtra("nbQuestion", 5), 
-					this);
 			task = new TimerTask(this, getIntent().getIntExtra("nbQuestion", 5));
 			task.execute();
-			
-		} else {
-			manager = new RevisionManager(
-					getIntent().getIntExtra("objId", 1),
-					getIntent().getIntExtra("nbQuestion", 5), 
-					this);
-			score.setVisibility(View.INVISIBLE);
-			timer.setVisibility(View.VISIBLE);
-		}
+		} else 
+			timer.setVisibility(View.INVISIBLE);
+		
 		setTitle("Question N°" + (manager.getCurrentQuestionNumber() + 1));
 		choiceList.setAdapter(manager);
 		validate.setOnClickListener(new OnClickListener() {
@@ -100,7 +94,7 @@ public class QuestionActivity extends Activity {
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				QuestionActivity.super.onBackPressed();
-				
+				finish();
 			}
 		})
 		.setNegativeButton("Non", new AlertDialog.OnClickListener() {
@@ -114,12 +108,12 @@ public class QuestionActivity extends Activity {
 		dialog.show();
 	}
 	
-	public void validateExam() {
-		manager.validate();
-		refreshList();
-		sensor.start();
+	public void timeIsUp() {
+		if(!manager.finished()) {
+			Toast.makeText(this, "Fin du temps!", Toast.LENGTH_LONG).show();
+			SaveScore(manager.getScore());
+		}
 	}
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -130,16 +124,20 @@ public class QuestionActivity extends Activity {
 
 	@Override
 	protected void onStop() {
+		paused = true;
+		Log.i("mode", "stopped");
 		manager.save();
 		if(task != null) {
 			LocalStorage.setInt("counter", task.getCounter());
 			task.cancel(true);
+			Log.i("task", "cancel");
 		}
 		super.onStop();
 	}
 	
 	@Override
 	protected void onStart() {
+		paused = false;
 		manager.load();
 		if(mode == 0) {
 			task = new TimerTask(this, manager.getMaxQuestion());
@@ -166,10 +164,18 @@ public class QuestionActivity extends Activity {
 	@Override
 	protected void onPause() {
 		sensor.pause();
+		Log.i("mode", "paused");
 		super.onPause();
 	}
+
+	@Override
+	protected void onResume() {
+		if(manager.isValidate())
+			sensor.start();
+		super.onResume();
+	}
 	
-	public void onShake() {
+public void onShake() {
 		manager.ShowRevision();
 	}
 
@@ -202,6 +208,7 @@ public class QuestionActivity extends Activity {
 				s.setPseudo(text.getText().toString());
 				s.setObjectiveId(manager.getObjectiveId());
 				ScoreManager.Save(s);
+				finish();
 			}
 		})
 		.setNegativeButton("Cancel", new AlertDialog.OnClickListener() {
@@ -209,8 +216,7 @@ public class QuestionActivity extends Activity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				startActivity(new Intent(QuestionActivity.this,
-						MenuActivity.class));
+				finish();
 			}
 		})
 		.setTitle("Voulez-vous enregister votre score?")
@@ -238,6 +244,10 @@ public class QuestionActivity extends Activity {
 		
 	}
 	
+	public boolean isPaused() {
+		return paused;
+	}
+	
 	public static class TimerTask extends AsyncTask<Void, Integer, Boolean> {
 
 		private WeakReference<QuestionActivity> activity;
@@ -261,10 +271,14 @@ public class QuestionActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			while(counter > 0 && !isCancelled()) {
+			boolean paused = false;
+			while(counter > 0  && !paused) {
 				counter--;
 				publishProgress(counter);
+				if(activity.get() != null)
+					paused = activity.get().isPaused();
 				SystemClock.sleep(1000);
+				Log.i("counter", counter + " " + isCancelled());
 			}
 			return true;
 		}
@@ -278,14 +292,12 @@ public class QuestionActivity extends Activity {
 		
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if(result && activity.get() != null)
-				activity.get().validateExam();
+			if(result && activity.get() != null && !activity.get().isPaused())
+				activity.get().timeIsUp();
 			super.onPostExecute(result);
 		}
-
-		
-
-
 	}
+
+
 
 }

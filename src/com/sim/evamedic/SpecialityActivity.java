@@ -10,14 +10,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.Window;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ListView;
 
 public class SpecialityActivity extends Activity {
 
@@ -26,7 +23,7 @@ public class SpecialityActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_speciality);
-		setTitle("Spécialités");
+		setTitle("Spécialités et Objectifs");
 		MyApp.setContext(getApplicationContext());
 		manager = new SpecialityManager();
 		manager.fetchSpecialities();
@@ -42,9 +39,9 @@ public class SpecialityActivity extends Activity {
 		
 				Objective o = (Objective) manager.getChild(groupPosition, childPostion);
 				Speciality s = (Speciality) manager.getGroup(groupPosition);
-				Log.i("click", "yes");
 				final Intent intent = new Intent(SpecialityActivity.this, 
 						QuestionActivity.class);
+				
 				intent.putExtra("objId", o.getId());
 				intent.putExtra("objective", o.getObjective());
 				intent.putExtra("specId", s.getId());

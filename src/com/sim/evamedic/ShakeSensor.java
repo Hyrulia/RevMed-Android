@@ -7,7 +7,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 public class ShakeSensor implements SensorEventListener {
 
@@ -56,7 +55,6 @@ public class ShakeSensor implements SensorEventListener {
 		if(mAccel > 1.5) 
 			if(activity.get() != null)
 				activity.get().onShake();
-		Log.i("sha", "y");
 	}
 
 }

@@ -18,6 +18,7 @@ public class RevisionActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_revision);
+		
 		setTitle("Revision et Astuces");
 		overridePendingTransition(R.anim.stretch,R.anim.shrink);
 		TextView revision = (TextView) findViewById(R.id.revisionText);
@@ -40,7 +41,7 @@ public class RevisionActivity extends Activity {
 		});
 		
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

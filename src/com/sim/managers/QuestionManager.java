@@ -24,17 +24,15 @@ import com.sim.pattern.DAOFactory;
 
 /**
  * TODO LIST
- * New question design
- * Add button validate
- * Style & theme (onFocus/onSelect, layouts, ...)
- * Score
- * More cleaning code
- * Sound & effects
+ * Apply the new theme
+ * Comment the code
+ * Score chart
+ * Social network
  * @author Nader
  *
  */
 
-public class RevisionManager extends BaseAdapter {
+public class QuestionManager extends BaseAdapter {
 	
 	protected int currentQuestionNumber = 0;
 	protected int maxQuestion = 0;
@@ -45,6 +43,14 @@ public class RevisionManager extends BaseAdapter {
 	protected boolean validate = false;
 	protected float score = 0;
 	
+	public float getScore() {
+		return score;
+	}
+
+	public void setScore(float score) {
+		this.score = score;
+	}
+
 	LayoutInflater inflater = (LayoutInflater) MyApp.getContext()
 			.getSystemService("layout_inflater");
 
@@ -53,7 +59,7 @@ public class RevisionManager extends BaseAdapter {
 	 * @param specialityId
 	 * @param activity
 	 */
-	public RevisionManager(int objectiveId, int max,QuestionActivity activity) {
+	public QuestionManager(int objectiveId, int max,QuestionActivity activity) {
 		this.objectiveId = objectiveId;
 		this.activity = new WeakReference<QuestionActivity>(activity);
 		setMaxQuestion(max);
@@ -85,6 +91,10 @@ public class RevisionManager extends BaseAdapter {
 	public void disableItem(Choice c) {
 		c.setChecked(true);
 		activity.get().refreshList();
+	}
+	
+	public boolean finished() {
+		return !(currentQuestionNumber < maxQuestion);
 	}
 
 	/**
@@ -154,8 +164,25 @@ public class RevisionManager extends BaseAdapter {
 		
 	}
 	
+	public void calculateScore() {
+		int totalCorrect = correctChoices();
+		int correct = 0;
+		int wrong = 0;
+		for(Choice c: choices) {
+			if(c.isChecked())
+				if(c.getState() == 1)
+					correct++;
+				else
+					wrong++;			
+		}
+		score += (float)( correct * (1 / (float) totalCorrect) ) * ( 1 / (float)(wrong + 1) );
+	}
+	
+	
 	public void validate() {
 		validate = true;
+		calculateScore();
+		activity.get().updateScore(score);
 	}
 
 	/**
@@ -177,8 +204,10 @@ public class RevisionManager extends BaseAdapter {
 	 * @param idx The position of the choice
 	 */
 	public void onClickItem(int idx) {
-		disableItem(choices.get(idx));
+		if(!choices.get(idx).isChecked()) {
 		Sound.correct();
+		disableItem(choices.get(idx));
+		} 
 	}
 			
 	/*
@@ -265,5 +294,11 @@ public class RevisionManager extends BaseAdapter {
 	public void setMaxQuestion(int maxQuestion) {
 		this.maxQuestion = maxQuestion;
 	}
+
+	
+	public boolean isValidate() {
+		return validate;
+	}
+	
 	
 }

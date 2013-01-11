@@ -72,7 +72,7 @@ public class SQLite extends SQLiteOpenHelper{
     public void openDataBase() {
         String myPath = DB_PATH + DB_NAME;
     	myDataBase = SQLiteDatabase.openDatabase(myPath, null, 
-    			SQLiteDatabase.OPEN_READONLY);
+    			SQLiteDatabase.OPEN_READWRITE);
     }
  
     @Override
