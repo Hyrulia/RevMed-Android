@@ -1,7 +1,6 @@
 package com.sim.pattern;
 
 import android.database.sqlite.SQLiteDatabase;
-import com.sim.dao.SQLite;
 
 public abstract class DAO<T> {
 	

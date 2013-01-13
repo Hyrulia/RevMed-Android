@@ -126,7 +126,6 @@ public class QuestionActivity extends Activity {
 	protected void onStop() {
 		paused = true;
 		Log.i("mode", "stopped");
-		manager.save();
 		if(task != null) {
 			LocalStorage.setInt("counter", task.getCounter());
 			task.cancel(true);
@@ -138,7 +137,6 @@ public class QuestionActivity extends Activity {
 	@Override
 	protected void onStart() {
 		paused = false;
-		manager.load();
 		if(mode == 0) {
 			task = new TimerTask(this, manager.getMaxQuestion());
 			task.execute();
@@ -255,7 +253,7 @@ public void onShake() {
 		
 		public TimerTask(QuestionActivity a, int questionNb) {
 			activity = new WeakReference<QuestionActivity>(a);
-			counter = 100 * questionNb / 5; 
+			counter = 300 * questionNb / 5; 
 		}
 		
 		
@@ -278,7 +276,6 @@ public void onShake() {
 				if(activity.get() != null)
 					paused = activity.get().isPaused();
 				SystemClock.sleep(1000);
-				Log.i("counter", counter + " " + isCancelled());
 			}
 			return true;
 		}
@@ -293,7 +290,7 @@ public void onShake() {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if(result && activity.get() != null && !activity.get().isPaused())
-				activity.get().timeIsUp();
+				//activity.get().timeIsUp();
 			super.onPostExecute(result);
 		}
 	}

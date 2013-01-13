@@ -27,7 +27,8 @@
         </activity>
         <activity
             android:name="com.sim.evamedic.RevisionActivity"
-            android:label="@string/title_activity_revision" >
+            android:label="@string/title_activity_revision"
+             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.sim.evamedic.SplashScreenActivity"

@@ -184,20 +184,6 @@ public class QuestionManager extends BaseAdapter {
 		calculateScore();
 		activity.get().updateScore(score);
 	}
-
-	/**
-	 * Save states of the manager when the activity is paused
-	 */
-	public void save() {
-	
-	}
-	
-	/**
-	 * Load states
-	 */
-	public void load() {
-
-	}
 	
 	/**
 	 * When a choice has been clicked
