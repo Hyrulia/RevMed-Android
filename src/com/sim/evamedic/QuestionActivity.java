@@ -36,9 +36,10 @@ public class QuestionActivity extends Activity {
 	private TextView revision;
 	private int mode = 0;
 	private TimerTask task;
-	private boolean paused = false;
+	private boolean finished = false;
 	private String objective;
 	private String speciality;
+	private int counter = 100;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,8 @@ public class QuestionActivity extends Activity {
 				this);
 		
 		if(mode == 0) {
-			task = new TimerTask(this, getIntent().getIntExtra("nbQuestion", 5));
+			counter = 300 * getIntent().getIntExtra("nbQuestion", 5) / 5; 
+			task = new TimerTask(this, counter);
 			task.execute();
 		} else 
 			timer.setVisibility(View.INVISIBLE);
@@ -123,21 +125,20 @@ public class QuestionActivity extends Activity {
 
 	@Override
 	protected void onStop() {
-		paused = true;
-		Log.i("mode", "stopped");
-		if(task != null) {
-			LocalStorage.setInt("counter", task.getCounter());
-			task.cancel(true);
-			Log.i("task", "cancel");
+		if(mode == 0) {
+			finished = true;
+			if(task != null) {
+				task.cancel(true);
+			}
 		}
 		super.onStop();
 	}
 	
 	@Override
 	protected void onStart() {
-		paused = false;
 		if(mode == 0) {
-			task = new TimerTask(this, manager.getMaxQuestion());
+			finished = false;
+			task = new TimerTask(this, counter);
 			task.execute();
 		}
 		super.onStart();
@@ -161,7 +162,6 @@ public class QuestionActivity extends Activity {
 	@Override
 	protected void onPause() {
 		sensor.pause();
-		Log.i("mode", "paused");
 		super.onPause();
 	}
 
@@ -185,6 +185,12 @@ public class QuestionActivity extends Activity {
 	}
 	
 	public void SaveScore(final float score) {
+		
+		if(mode == 0) {
+			finished = true;
+			task.cancel(true);
+		}
+		
 		final EditText text = new EditText(this);
 		text.setText("Votre pseudo ici");
 		text.setOnClickListener(new OnClickListener() {
@@ -196,7 +202,7 @@ public class QuestionActivity extends Activity {
 			}
 		});
 		final AlertDialog dialog = new AlertDialog.Builder(this)
-		.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+		.setPositiveButton("Sauvegarder", new AlertDialog.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialogx, int which) {
@@ -243,6 +249,8 @@ public class QuestionActivity extends Activity {
 	}
 			
 	public void updateTimer(int timer) {
+		counter = timer;
+		Log.i("timer", counter+"");
 		int seconde = timer % 60;
 		int minute = timer / 60;
 		this.timer.setText("Temps restant: " + String.format("%02d", minute) + 
@@ -259,43 +267,29 @@ public class QuestionActivity extends Activity {
 		setTitle("Question N°" + (manager.getCurrentQuestionNumber() + 1));
 		
 	}
-	
-	public boolean isPaused() {
-		return paused;
+		
+	public boolean isFinished() {
+		return finished;
 	}
-	
 	public static class TimerTask extends AsyncTask<Void, Integer, Boolean> {
 
 		private WeakReference<QuestionActivity> activity;
-		private int counter = 100;
+		private int counter;
 		
-		public TimerTask(QuestionActivity a, int questionNb) {
+		public TimerTask(QuestionActivity a, int c) {
 			activity = new WeakReference<QuestionActivity>(a);
-			counter = 300 * questionNb / 5; 
+			counter = c;
 		}
-		
-		
-		public int getCounter() {
-			return counter;
-		}
-
-
-		public void setCounter(int counter) {
-			this.counter = counter;
-		}
-
-
+	
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			boolean paused = false;
-			while(counter > 0  && !paused) {
+			
+			while(activity.get() != null && !activity.get().isFinished()) {
 				counter--;
 				publishProgress(counter);
-				if(activity.get() != null)
-					paused = activity.get().isPaused();
 				SystemClock.sleep(1000);
 			}
-			return true;
+			return !activity.get().isFinished();
 		}
 		
 		@Override
@@ -307,8 +301,8 @@ public class QuestionActivity extends Activity {
 		
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if(result && activity.get() != null && !activity.get().isPaused())
-				//activity.get().timeIsUp();
+			if(result && activity.get() != null)
+				activity.get().timeIsUp();
 			super.onPostExecute(result);
 		}
 	}
