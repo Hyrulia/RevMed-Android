@@ -12,6 +12,7 @@ import android.provider.Settings.System;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
@@ -36,6 +37,8 @@ public class QuestionActivity extends Activity {
 	private int mode = 0;
 	private TimerTask task;
 	private boolean paused = false;
+	private String objective;
+	private String speciality;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,9 @@ public class QuestionActivity extends Activity {
 		question = (TextView) findViewById(R.id.questionView);
 		mode = getIntent().getIntExtra("mode", 0);	
 		sensor = new ShakeSensor(this);
+		
+		objective = getIntent().getStringExtra("objective");
+		speciality = getIntent().getStringExtra("speciality");
 		
 		ListView choiceList = (ListView) findViewById(R.id.choicesList);
 		validate = (Button) findViewById(R.id.validateButton);
@@ -116,13 +122,6 @@ public class QuestionActivity extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
-
-	@Override
 	protected void onStop() {
 		paused = true;
 		Log.i("mode", "stopped");
@@ -173,7 +172,7 @@ public class QuestionActivity extends Activity {
 		super.onResume();
 	}
 	
-public void onShake() {
+	public void onShake() {
 		manager.ShowRevision();
 	}
 
@@ -196,16 +195,12 @@ public void onShake() {
 					text.setText("");
 			}
 		});
-		AlertDialog dialog = new AlertDialog.Builder(this)
+		final AlertDialog dialog = new AlertDialog.Builder(this)
 		.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
 
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				Score s = new Score();
-				s.setScore(score);
-				s.setPseudo(text.getText().toString());
-				s.setObjectiveId(manager.getObjectiveId());
-				ScoreManager.Save(s);
+			public void onClick(DialogInterface dialogx, int which) {
+				doSaveScore(text.getText().toString(), score);
 				finish();
 			}
 		})
@@ -217,11 +212,34 @@ public void onShake() {
 				finish();
 			}
 		})
+		.setNeutralButton("Sauvegarder et partager", new AlertDialog.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+				sharingIntent.setType("text/plain");
+				sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, 
+					"Je viens de faire un nouveau score de " + 
+					String.format("%.2f", score) + " en " + objective + " de la " +
+					"specialité " + speciality);
+				startActivity(Intent.createChooser(sharingIntent, "Patager avec"));
+				doSaveScore(text.getText().toString(), score);
+				finish();
+			}
+		})
 		.setTitle("Voulez-vous enregister votre score?")
 		.setView(text)
 		.create();
 		
 		dialog.show();
+	}
+	
+	private void doSaveScore(String pseudo, float score) {
+		Score s = new Score();
+		s.setScore(score);
+		s.setPseudo(pseudo);
+		s.setObjectiveId(manager.getObjectiveId());
+		ScoreManager.Save(s);
 	}
 			
 	public void updateTimer(int timer) {

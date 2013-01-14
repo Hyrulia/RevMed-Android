@@ -1,17 +1,25 @@
 package com.sim.evamedic;
 
-import com.sim.managers.ScoreManager;
 
+import org.achartengine.GraphicalView;
+
+import com.sim.chart.ChartScore;
+import com.sim.managers.ScoreManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class ScoreActivity extends Activity {
 
+	GraphicalView view = null;
+	boolean chartLoaded = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,20 +33,28 @@ public class ScoreActivity extends Activity {
 		TextView pseudo = (TextView) v.findViewById(R.id.itemPseudoText);
 		TextView score = (TextView) v.findViewById(R.id.itemScoreText);
 		TextView date = (TextView) v.findViewById(R.id.itemDateText);
+		TextView objective = (TextView) v.findViewById(R.id.itemObjectiveText);
 		
 		pseudo.setText("Pseudo");
 		score.setText("Score");
 		date.setText("Date");
+		objective.setText("Objective");
 		
 		list.addHeaderView(v);
 		list.setAdapter(manager);
 	}
-
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_score, menu);
-		return true;
+	protected void onResume() {
+		if(!chartLoaded) {
+			chartLoaded = true;
+			ChartScore chart = new ChartScore();
+			LinearLayout layout = (LinearLayout) findViewById(R.id.myLayout); 
+			layout.addView(chart.getView(), new TableLayout.LayoutParams
+					(TableLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+		} 
+		    
+		super.onResume();
 	}
 
 }

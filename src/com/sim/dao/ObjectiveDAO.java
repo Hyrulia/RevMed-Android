@@ -23,17 +23,32 @@ public class ObjectiveDAO extends DAO<Choice> {
 			SPECIALITY_ID + "=" + id, 
 			null, null, null, null);
 
-		 List<Objective> choices = new ArrayList<Objective>();
+		 List<Objective> objectives = new ArrayList<Objective>();
 		
 		while(crs.moveToNext()) {
-			Objective choice = new Objective();
-			choice.setId(crs.getInt(crs.getColumnIndex(ID)));
-			choice.setObjective(crs.getString(crs.getColumnIndex(OBJECTIVE)));
-			choice.setSpeciality_id(crs.getInt(crs.getColumnIndex(SPECIALITY_ID)));
-			choices.add(choice);
+			Objective o = new Objective();
+			o.setId(crs.getInt(crs.getColumnIndex(ID)));
+			o.setObjective(crs.getString(crs.getColumnIndex(OBJECTIVE)));
+			o.setSpeciality_id(crs.getInt(crs.getColumnIndex(SPECIALITY_ID)));
+			objectives.add(o);
 		}
 		crs.close();
-		return choices;
+		return objectives;
+	}
+	
+	public Objective getById(int id) {
+		Cursor crs = db.query(TABLE_NAME, 
+				new String[] {ID, OBJECTIVE, SPECIALITY_ID},
+				ID + "=" + id, 
+				null, null, null, null);
+		Objective o = null;
+		if(crs.moveToNext()) {
+			o = new Objective();
+			o.setId(crs.getInt(crs.getColumnIndex(ID)));
+			o.setObjective(crs.getString(crs.getColumnIndex(OBJECTIVE)));
+			o.setSpeciality_id(crs.getInt(crs.getColumnIndex(SPECIALITY_ID)));
+		}
+		return o;
 	}
 
 	

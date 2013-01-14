@@ -1,7 +1,10 @@
 package com.sim.managers;
 
 import java.util.List;
+
+import com.sim.dao.ObjectiveDAO;
 import com.sim.dao.ScoreDAO;
+import com.sim.entities.Objective;
 import com.sim.entities.Score;
 import com.sim.evamedic.MyApp;
 import com.sim.evamedic.R;
@@ -54,7 +57,13 @@ public class ScoreManager extends BaseAdapter {
 		TextView pseudo = (TextView) v.findViewById(R.id.itemPseudoText);
 		TextView score = (TextView) v.findViewById(R.id.itemScoreText);
 		TextView date = (TextView) v.findViewById(R.id.itemDateText);
+		TextView objectiveText = (TextView) v.findViewById(R.id.itemObjectiveText);
+		ObjectiveDAO dao = new ObjectiveDAO();
+		dao.open();
+		Objective o = dao.getById(scores.get(arg0).getObjectiveId());
+		dao.close();
 		
+		objectiveText.setText(o.getObjective());
 		String scr = String.format("%.2f", scores.get(arg0).getScore());
 		pseudo.setText(scores.get(arg0).getPseudo());
 		score.setText(scr);

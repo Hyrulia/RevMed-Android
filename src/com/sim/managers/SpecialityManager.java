@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.sim.dao.SpecialityDAO;
 import com.sim.entities.Objective;
@@ -76,8 +77,14 @@ public class SpecialityManager extends BaseExpandableListAdapter{
 
 	@Override
 	public View getGroupView(int arg0, boolean arg1, View arg2, ViewGroup arg3) {
+		int[] icone = new int[]{R.drawable.spec_icone_1, R.drawable.spec_icone_2,
+				R.drawable.spec_icone_3, R.drawable.spec_icone_4,
+				R.drawable.spec_icone_5, R.drawable.spec_icone_6,
+				R.drawable.spec_icone_7, R.drawable.spec_icone_8};
 		View view = inflater.inflate(R.layout.item_speciality, null);
 		TextView text = (TextView) view.findViewById(R.id.specialityItem);
+		ImageView img = (ImageView) view.findViewById(R.id.specIcon);
+		img.setImageResource(icone[arg0 % icone.length]);
 		text.setText(specialities.get(arg0).getSpeciality());
 		return view;
 	}

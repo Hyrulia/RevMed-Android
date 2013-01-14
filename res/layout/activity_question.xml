@@ -39,6 +39,8 @@
 	         android:layout_alignParentBottom="true"
 	         android:layout_alignParentRight="true"
 	         android:layout_alignParentTop="true"
+	         android:background="@drawable/button_selector"
+	         android:layout_marginRight="10dp"
 	         android:text="Valider" />
 
 	     <TextView
@@ -68,6 +70,8 @@
 	         android:layout_alignParentRight="true"
 	         android:layout_alignParentTop="true"
 	         android:text="Revision"
+	         android:background="@drawable/button_selector"
+	         android:layout_marginRight="10dp"
 	         android:visibility="invisible" />
 
 	 </RelativeLayout>

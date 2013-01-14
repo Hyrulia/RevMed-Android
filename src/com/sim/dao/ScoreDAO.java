@@ -3,6 +3,8 @@ package com.sim.dao;
 import java.util.ArrayList;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
+
 import com.sim.entities.Score;
 import com.sim.pattern.DAO;
 
@@ -13,18 +15,20 @@ public class ScoreDAO extends DAO<Score>{
 	public final static String SCORE = "score";
 	public final static String PSEUDO = "pseudo";
 	public final static String DATE = "date";
+	public final static String OBJECTIVE_ID = "objective_id";
 
 	public long insert(Score s) {
 		ContentValues data = new ContentValues();	
 		s.setDate("");
 		data.put(SCORE, s.getScore());
 		data.put(PSEUDO, s.getPseudo());
+		data.put(OBJECTIVE_ID, s.getObjectiveId());
 		return db.insert(TABLE_NAME, null, data);
 	}
 	
 	public ArrayList<Score> getAll() {
 		Cursor crs = db.query(TABLE_NAME, 
-			new String[] { ID, SCORE, PSEUDO, DATE},
+			new String[] { ID, SCORE, PSEUDO, DATE, OBJECTIVE_ID},
 			null, 
 			null, null, null, DATE);
 
@@ -35,6 +39,7 @@ public class ScoreDAO extends DAO<Score>{
 			s.setScore(crs.getFloat(crs.getColumnIndex(SCORE)));
 			s.setPseudo(crs.getString(crs.getColumnIndex(PSEUDO)));
 			s.setDate(crs.getString(crs.getColumnIndex(DATE)));
+			s.setObjectiveId(crs.getInt(crs.getColumnIndex(OBJECTIVE_ID)));
 			scores.add(s);
 		}
 		crs.close();
