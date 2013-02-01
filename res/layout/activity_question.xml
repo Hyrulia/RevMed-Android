@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F6F6F6"
     tools:context=".MainActivity" >
 
 
@@ -34,14 +35,12 @@
 
 	     <Button
 	         android:id="@+id/validateButton"
-	         android:layout_width="100dp"
-	         android:layout_height="match_parent"
+       		android:layout_width="150dp"
+       		android:layout_height="60dp"
 	         android:layout_alignParentBottom="true"
 	         android:layout_alignParentRight="true"
-	         android:layout_alignParentTop="true"
-	         android:background="@drawable/button_selector"
-	         android:layout_marginRight="10dp"
-	         android:text="Valider" />
+	         android:background="@drawable/button_valider_selector"
+	         android:layout_marginRight="10dp" />
 
 	     <TextView
 	         android:id="@+id/timerText"
@@ -65,12 +64,11 @@
 
 	     <Button
 	         android:id="@+id/revisionButton"
-	         android:layout_width="100dp"
-	         android:layout_height="match_parent"
+       		android:layout_width="150dp"
+       		android:layout_height="60dp"
+	         android:layout_alignParentBottom="true"
 	         android:layout_alignParentRight="true"
-	         android:layout_alignParentTop="true"
-	         android:text="Revision"
-	         android:background="@drawable/button_selector"
+	         android:background="@drawable/button_commentaire_selector"
 	         android:layout_marginRight="10dp"
 	         android:visibility="invisible" />
 

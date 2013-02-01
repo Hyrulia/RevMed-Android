@@ -6,35 +6,28 @@
     android:background="@drawable/img_menu" >
 
     <Button
-        android:id="@+id/scoreButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/modeRevisionButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/modeExamButton"
-        android:background="@drawable/button_selector"
-        android:layout_marginBottom="20dp"
-        android:text="Score" />
+        android:id="@+id/modeRevisionButton"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_above="@+id/scoreButton"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/menu_revision_button" />
 
     <Button
         android:id="@+id/modeExamButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/scoreButton"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_above="@+id/modeRevisionButton"
         android:layout_alignLeft="@+id/modeRevisionButton"
-        android:layout_alignRight="@+id/modeRevisionButton"
-        android:background="@drawable/button_selector"
-        android:layout_marginBottom="20dp"
-        android:text="Mode Examen" />
+        android:background="@drawable/menu_exam_button" />
 
     <Button
-        android:id="@+id/modeRevisionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/modeExamButton"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/button_selector"
-        android:layout_marginBottom="20dp"
-        android:text="Mode Revision" />
+        android:id="@+id/scoreButton"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_alignLeft="@+id/modeRevisionButton"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="19dp"
+        android:background="@drawable/menu_score_button" />
 
 </RelativeLayout>

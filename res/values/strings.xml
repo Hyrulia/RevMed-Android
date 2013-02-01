@@ -13,7 +13,7 @@
     <string name="title_activity_revision">Revision</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="dummy_button">Dummy Button</string>
-    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="title_activity_splash_screen"></string>
     <string name="title_activity_objective">ObjectiveActivity</string>
     <string name="title_activity_score">ScoreActivity</string>
     <string name="title_activity_menu">MenuActivity</string>

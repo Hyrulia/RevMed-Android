@@ -48,8 +48,9 @@ public class SpecialityActivity extends Activity {
 				intent.putExtra("specId", s.getId());
 				intent.putExtra("speciality", s.getSpeciality());
 				intent.putExtra("mode", getIntent().getIntExtra("mode", 0));
-				
-				AlertDialog dialog = new AlertDialog.Builder(SpecialityActivity.this)
+				intent.putExtra("nbQuestion", 5);
+				/*
+				 AlertDialog dialog = new AlertDialog.Builder(SpecialityActivity.this)
 				.setSingleChoiceItems(new String[]{"5 questions", "10 questions"
 						, "15 questions"}, 0, new OnClickListener() {
 
@@ -78,6 +79,9 @@ public class SpecialityActivity extends Activity {
 				.setTitle("Nombre de questions")
 				.create();
 				dialog.show();
+				*/
+			startActivity(intent);	
+			finish();
 			return true;
 			}
 		});

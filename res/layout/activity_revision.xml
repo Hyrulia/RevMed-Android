@@ -2,17 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/revisionLayout"
+    android:background="#F6F6F6"
     tools:context=".Revision" >
-
-    <Button
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/button_selector"
-        android:layout_marginRight="10dp"
-        android:text="Question suivante" />
 
    <TextView
        android:id="@+id/revisionText"
@@ -21,15 +13,22 @@
        android:layout_above="@+id/back"
        android:layout_alignParentLeft="true"
        android:layout_alignParentRight="true"
-       android:layout_margin="25dp"
-       android:paddingLeft="20dp"
-       android:paddingTop="35dp"
-       android:paddingRight="45dp"
-       android:paddingBottom="10dp"
-       android:background="@drawable/img_fiche"
+       android:layout_marginLeft="40dip"
+       android:layout_marginTop="35dip"
+       android:layout_marginRight="40dip"
+       
        android:maxLines="10"
        android:scrollbars="vertical"
        android:textAppearance="?android:attr/textAppearanceMedium"
        android:textColor="@color/black" />
+
+   <Button
+       android:id="@+id/revisionBack"
+       android:layout_width="150dp"
+       android:layout_height="60dp"
+       android:layout_alignParentBottom="true"
+       android:layout_alignParentLeft="true"
+       android:background="@drawable/button_next_selector"
+      />
 
 </RelativeLayout>

@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class RevisionActivity extends Activity {
@@ -18,12 +19,17 @@ public class RevisionActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_revision);
-		
+		int[] bg = new int[]{R.drawable.revision_1, R.drawable.revision_2, 
+				R.drawable.revision_3, R.drawable.revision_4, R.drawable.revision_5, 
+				R.drawable.revision_6, R.drawable.revision_7 }; 
 		setTitle("Revision et Astuces");
 		overridePendingTransition(R.anim.stretch,R.anim.shrink);
 		TextView revision = (TextView) findViewById(R.id.revisionText);
-		Button backBt = (Button) findViewById(R.id.back);
+		Button backBt = (Button) findViewById(R.id.revisionBack);
+		RelativeLayout layout = (RelativeLayout) findViewById(R.id.revisionLayout);
 		
+		int specId = getIntent().getIntExtra("specId", 1);
+		layout.setBackgroundResource(bg[specId - 1]);
 		RevisionDAO dao = (RevisionDAO) DAOFactory.create(DAOFactory.REVISION);
 		dao.open();
 		Revision r = dao.getByQuestionId(getIntent()

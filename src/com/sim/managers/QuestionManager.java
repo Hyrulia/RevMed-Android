@@ -126,16 +126,7 @@ public class QuestionManager extends BaseAdapter {
 			.getId());
 		dao.close();
 	}
-	/**
-	 * Start new activity Revision
-	 */
-	public void ShowRevision() {
-		Intent intent = new Intent(activity.get(), RevisionActivity.class);
-		intent.putExtra("question", getCurrentQuestion().getQuestion());
-		intent.putExtra("choice", getCorrectChoice().getChoice());
-		intent.putExtra("questionId", getCurrentQuestion().getId());
-		activity.get().startRevisionActivity(intent);
-	}
+
 	
 	/**
 	 * 
@@ -159,9 +150,14 @@ public class QuestionManager extends BaseAdapter {
 			activity.get().updateTitle();
 			fetchChoices();
 				activity.get().refreshList();
-		} else 
-			activity.get().SaveScore(score);
-		
+		} else { 
+			if(activity.get().getMode() == 0)
+				activity.get().SaveScore(score);
+			else {
+				activity.get().finish();
+			}
+				
+		}
 	}
 	
 	public void calculateScore() {

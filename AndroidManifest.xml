@@ -33,7 +33,7 @@
         <activity
             android:name="com.sim.evamedic.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_splash_screen"
+            android:label="Revmed"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" >
          <intent-filter>

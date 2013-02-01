@@ -35,12 +35,21 @@ public class QuestionActivity extends Activity {
 	private Button validate;
 	private TextView revision;
 	private int mode = 0;
+	private int specId = 0;
 	private TimerTask task;
 	private boolean finished = false;
 	private String objective;
 	private String speciality;
 	private int counter = 100;
 	
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,6 +58,7 @@ public class QuestionActivity extends Activity {
 		mode = getIntent().getIntExtra("mode", 0);	
 		sensor = new ShakeSensor(this);
 		
+		specId = getIntent().getIntExtra("specId", 1);
 		objective = getIntent().getStringExtra("objective");
 		speciality = getIntent().getStringExtra("speciality");
 		
@@ -63,12 +73,14 @@ public class QuestionActivity extends Activity {
 				this);
 		
 		if(mode == 0) {
-			counter = 300 * getIntent().getIntExtra("nbQuestion", 5) / 5; 
+			counter = 180 * getIntent().getIntExtra("nbQuestion", 5) / 5; 
 			task = new TimerTask(this, counter);
 			task.execute();
-		} else 
+		} else {
 			timer.setVisibility(View.INVISIBLE);
-		
+			score.setVisibility(View.INVISIBLE);
+			
+		}
 		setTitle("Question N°" + (manager.getCurrentQuestionNumber() + 1));
 		choiceList.setAdapter(manager);
 		validate.setOnClickListener(new OnClickListener() {
@@ -87,7 +99,8 @@ public class QuestionActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				manager.ShowRevision();
+				sensor.pause();
+				ShowRevision();
 			}
 		});
 	}
@@ -172,8 +185,17 @@ public class QuestionActivity extends Activity {
 		super.onResume();
 	}
 	
+	public void ShowRevision() {
+		Intent intent = new Intent(this, RevisionActivity.class);
+		intent.putExtra("question", manager.getCurrentQuestion().getQuestion());
+		intent.putExtra("choice", manager.getCorrectChoice().getChoice());
+		intent.putExtra("questionId", manager.getCurrentQuestion().getId());
+		intent.putExtra("specId", specId);
+		startRevisionActivity(intent);
+	}
+	
 	public void onShake() {
-		manager.ShowRevision();
+		ShowRevision();
 	}
 
 	public void refreshList() {
@@ -202,7 +224,7 @@ public class QuestionActivity extends Activity {
 			}
 		});
 		final AlertDialog dialog = new AlertDialog.Builder(this)
-		.setPositiveButton("Sauvegarder", new AlertDialog.OnClickListener() {
+		.setPositiveButton("Save", new AlertDialog.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialogx, int which) {
@@ -218,7 +240,7 @@ public class QuestionActivity extends Activity {
 				finish();
 			}
 		})
-		.setNeutralButton("Sauvegarder et partager", new AlertDialog.OnClickListener() {
+		.setNeutralButton("Save & Share", new AlertDialog.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -284,9 +306,11 @@ public class QuestionActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			
-			while(activity.get() != null && !activity.get().isFinished()) {
+			while(activity.get() != null && !activity.get().isFinished() && !isCancelled()) {
 				counter--;
 				publishProgress(counter);
+				if(counter <= 0)
+					break;
 				SystemClock.sleep(1000);
 			}
 			return !activity.get().isFinished();
@@ -306,7 +330,6 @@ public class QuestionActivity extends Activity {
 			super.onPostExecute(result);
 		}
 	}
-
 
 
 }

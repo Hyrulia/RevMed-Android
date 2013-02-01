@@ -1,5 +1,7 @@
 package com.sim.evamedic;
 
+import java.lang.reflect.Field;
+
 import android.app.Application;
 import android.content.Context;
 
@@ -15,6 +17,7 @@ private static boolean soundEnable = true;
 		MyApp.soundEnable = soundEnable;
 	}
 	
+	
 	private static Context context; 
 	
 	
@@ -23,6 +26,18 @@ private static boolean soundEnable = true;
 	}
 	public static Context getContext() {
 		return context;
+	}
+	
+	
+	public static int getResourceFromString(String variableName, Class<?> c) {
+
+	    try {
+	        Field idField = c.getDeclaredField(variableName);
+	        return idField.getInt(idField);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return -1;
+	    } 
 	}
 	
 }
