@@ -1,16 +1,12 @@
 package com.sim.evamedic;
 
-
 import org.achartengine.GraphicalView;
-
 import com.sim.chart.ChartScore;
 import com.sim.managers.ScoreManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;

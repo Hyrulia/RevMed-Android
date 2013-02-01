@@ -3,8 +3,6 @@ package com.sim.dao;
 import java.util.ArrayList;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
-
 import com.sim.entities.Score;
 import com.sim.pattern.DAO;
 

@@ -3,10 +3,8 @@ package com.sim.evamedic;
 import com.sim.dao.RevisionDAO;
 import com.sim.entities.Revision;
 import com.sim.pattern.DAOFactory;
-
 import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,6 +16,11 @@ public class RevisionActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if(getIntent().getIntExtra("mode", 0) == 0) {
+			setResult(999);
+			finish();
+		}
 		setContentView(R.layout.activity_revision);
 		int[] bg = new int[]{R.drawable.revision_1, R.drawable.revision_2, 
 				R.drawable.revision_3, R.drawable.revision_4, R.drawable.revision_5, 

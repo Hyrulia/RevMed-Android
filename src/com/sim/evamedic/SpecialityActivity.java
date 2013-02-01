@@ -3,16 +3,10 @@ package com.sim.evamedic;
 import com.sim.entities.Objective;
 import com.sim.entities.Speciality;
 import com.sim.managers.SpecialityManager;
-
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
-import android.view.Menu;
 import android.view.View;
-import android.view.Window;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 

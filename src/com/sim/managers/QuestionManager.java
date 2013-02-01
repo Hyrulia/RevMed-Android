@@ -2,7 +2,6 @@ package com.sim.managers;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +16,6 @@ import com.sim.entities.Question;
 import com.sim.evamedic.MyApp;
 import com.sim.evamedic.QuestionActivity;
 import com.sim.evamedic.R;
-import com.sim.evamedic.RevisionActivity;
 import com.sim.evamedic.Sound;
 import com.sim.pattern.DAOFactory;
 

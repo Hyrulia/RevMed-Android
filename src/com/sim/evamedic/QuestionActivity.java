@@ -4,19 +4,15 @@ import java.lang.ref.WeakReference;
 import com.sim.entities.Score;
 import com.sim.managers.QuestionManager;
 import com.sim.managers.ScoreManager;
-import com.sim.storage.LocalStorage;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.provider.Settings.System;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -74,6 +70,7 @@ public class QuestionActivity extends Activity {
 		
 		if(mode == 0) {
 			counter = 180 * getIntent().getIntExtra("nbQuestion", 5) / 5; 
+			revision.setBackgroundResource(R.drawable.button_next_selector);
 			task = new TimerTask(this, counter);
 			task.execute();
 		} else {
@@ -191,6 +188,7 @@ public class QuestionActivity extends Activity {
 		intent.putExtra("choice", manager.getCorrectChoice().getChoice());
 		intent.putExtra("questionId", manager.getCurrentQuestion().getId());
 		intent.putExtra("specId", specId);
+		intent.putExtra("mode", mode);
 		startRevisionActivity(intent);
 	}
 	
